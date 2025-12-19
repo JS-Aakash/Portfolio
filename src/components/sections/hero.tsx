@@ -136,7 +136,7 @@ const HeroSection = () => {
             </div>
           )}
         </div>
-        <div className="col-span-12 md:col-span-4 flex items-center justify-center z-[2] mt-8 md:mt-0 -translate-y-[50px] md:translate-y-0 md:-translate-x-[175px] pointer-events-auto">
+        <div className="col-span-12 md:col-span-4 flex items-center justify-center z-[2] mt-8 md:mt-0 md:-translate-x-[175px] pointer-events-auto">
           <BlurIn delay={1.5}>
             <TechProfileImage />
           </BlurIn>
