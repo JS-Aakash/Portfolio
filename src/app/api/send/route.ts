@@ -8,7 +8,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const Email = z.object({
   fullName: z.string().min(2, "Full name is invalid!"),
   email: z.string().email({ message: "Email is invalid!" }),
-  message: z.string().min(10, "Message is too short!"),
+  message: z.string().min(2, "Message is too short!"),
 });
 export async function POST(req: Request) {
   try {
@@ -20,7 +20,10 @@ export async function POST(req: Request) {
       error: zodError,
     } = Email.safeParse(body);
     if (!zodSuccess)
-      return Response.json({ error: zodError?.message }, { status: 400 });
+      return Response.json(
+        { error: zodError.errors[0].message },
+        { status: 400 }
+      );
 
     const { data: resendData, error: resendError } = await resend.emails.send({
       from: "Porfolio <onboarding@resend.dev>",
@@ -34,11 +37,14 @@ export async function POST(req: Request) {
     });
 
     if (resendError) {
-      return Response.json({ resendError }, { status: 500 });
+      return Response.json({ error: resendError.message }, { status: 500 });
     }
 
     return Response.json(resendData);
-  } catch (error) {
-    return Response.json({ error }, { status: 500 });
+  } catch (error: any) {
+    return Response.json(
+      { error: error.message || "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
