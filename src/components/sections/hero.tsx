@@ -266,8 +266,8 @@ const TechProfileImage = () => {
 
         {/* Tech Words Orbiting */}
         {[
-          { text: "0x7F2A_DE31", top: "10%", left: isMobile ? "105%" : "95%" },
-          { text: "() => void", top: "90%", left: isMobile ? "95%" : "80%" },
+          { text: "0x7F2A_DE31", top: "10%", left: isMobile ? "85%" : "95%" },
+          { text: "() => void", top: "90%", left: isMobile ? "75%" : "80%" },
           { text: "<Component />", top: "85%", left: isMobile ? "-15%" : "-15%" },
           { text: "std::move()", top: "5%", left: isMobile ? "-10%" : "-10%" },
         ].map((word, idx) => (
