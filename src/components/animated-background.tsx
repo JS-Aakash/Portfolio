@@ -222,13 +222,7 @@ const AnimatedBackground = () => {
     }
   }, [theme, splineApp, isMobile, activeSection]);
 
-  // initialize gsap animations
-  useEffect(() => {
-    handleSplineInteractions();
-    handleGsapAnimations();
-    setBongoAnimation(getBongoAnimation());
-    setKeycapAnimtations(getKeycapsAnimation());
-  }, [splineApp]);
+
 
   useEffect(() => {
     let rotateKeyboard: gsap.core.Tween;
@@ -371,15 +365,45 @@ const AnimatedBackground = () => {
       splineApp.setVariable("heading", "");
       splineApp.setVariable("desc", "");
     });
+    splineApp.addEventListener("mouseUp", (e) => {
+      if (!splineApp) return;
+      splineApp.setVariable("heading", "");
+      splineApp.setVariable("desc", "");
+    });
     splineApp.addEventListener("keyDown", (e) => {
       if (!splineApp) return;
       const skill = SKILLS[e.target.name as SkillNames];
       if (skill) setSelectedSkill(skill);
-      // splineApp.setVariable("heading", skill.label);
-      // splineApp.setVariable("desc", skill.shortDescription);
+    });
+    splineApp.addEventListener("mouseDown", (e) => {
+      if (!splineApp) return;
+      const skill = SKILLS[e.target.name as SkillNames];
+      if (skill) setSelectedSkill(skill);
     });
     splineApp.addEventListener("mouseHover", handleMouseHover);
+
+    // Support for physical mobile touch events
+    splineApp.addEventListener("touchStart", (e) => {
+      if (!splineApp) return;
+      const skill = SKILLS[e.target.name as SkillNames];
+      if (skill) setSelectedSkill(skill);
+    });
+
+    splineApp.addEventListener("touchEnd", (e) => {
+      if (!splineApp) return;
+      splineApp.setVariable("heading", "");
+      splineApp.setVariable("desc", "");
+    });
   };
+
+  // initialize gsap animations
+  useEffect(() => {
+    handleSplineInteractions();
+    handleGsapAnimations();
+    setBongoAnimation(getBongoAnimation());
+    setKeycapAnimtations(getKeycapsAnimation());
+  }, [splineApp]);
+
   const handleGsapAnimations = () => {
     if (!splineApp) return;
     const kbd: SPEObject | undefined = splineApp.findObjectByName("keyboard");
