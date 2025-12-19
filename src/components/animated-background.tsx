@@ -58,10 +58,10 @@ const STATES = {
     },
     mobile: {
       scale: { x: 0.18, y: 0.18, z: 0.18 },
-      position: { x: 0, y: -200, z: 0 },
+      position: { x: 0, y: 0, z: 0 },
       rotation: {
         x: 0,
-        y: Math.PI / 36,
+        y: 0,
         z: 0,
       },
     },
@@ -154,7 +154,7 @@ const AnimatedBackground = () => {
     if (!selectedSkill || !splineApp) return;
     splineApp.setVariable("heading", selectedSkill.label);
     splineApp.setVariable("desc", selectedSkill.shortDescription);
-  }, [selectedSkill, isMobile]);
+  }, [selectedSkill]);
 
   // handle keyboard heading and desc visibility
   useEffect(() => {
@@ -170,9 +170,6 @@ const AnimatedBackground = () => {
       !textMobileLight
     )
       return;
-
-    // Reposition text logic removed to keep file original as possible
-
     if (activeSection !== "skills") {
       textDesktopDark.visible = false;
       textDesktopLight.visible = false;
@@ -282,7 +279,7 @@ const AnimatedBackground = () => {
       if (rotateKeyboard) rotateKeyboard.kill();
       if (teardownKeyboard) teardownKeyboard.kill();
     };
-  }, [activeSection, splineApp, bongoAnimation, keycapAnimtations]);
+  }, [activeSection, splineApp]);
 
   const [keyboardRevealed, setKeyboardRevealed] = useState(false);
   const router = useRouter();
@@ -292,8 +289,7 @@ const AnimatedBackground = () => {
     router.push("/" + hash, { scroll: false });
     if (!splineApp || isLoading || keyboardRevealed) return;
     revealKeyCaps();
-  }, [splineApp, isLoading, activeSection, keyboardRevealed]);
-
+  }, [splineApp, isLoading, activeSection]);
   const revealKeyCaps = async () => {
     if (!splineApp) return;
     const kbd = splineApp.findObjectByName("keyboard");
@@ -334,7 +330,7 @@ const AnimatedBackground = () => {
       gsap.fromTo(
         keycap.position,
         { y: 200 },
-        { y: 0, duration: 0.5, delay: 0.1, ease: "bounce.out" }
+        { y: 50, duration: 0.5, delay: 0.1, ease: "bounce.out" }
       );
     });
   };
@@ -352,13 +348,18 @@ const AnimatedBackground = () => {
       splineApp.setVariable("heading", skill.label);
       splineApp.setVariable("desc", skill.shortDescription);
     });
-    // Add mouseDown listener for mobile touch support
+    // Add mouseDown listener for mobile interaction
     splineApp.addEventListener("mouseDown", (e) => {
       if (!splineApp) return;
       const skill = SKILLS[e.target.name as SkillNames];
       if (skill) setSelectedSkill(skill);
       splineApp.setVariable("heading", skill?.label || "");
       splineApp.setVariable("desc", skill?.shortDescription || "");
+    });
+    splineApp.addEventListener("mouseUp", (e) => {
+      if (!splineApp) return;
+      splineApp.setVariable("heading", "");
+      splineApp.setVariable("desc", "");
     });
     splineApp.addEventListener("mouseHover", handleMouseHover);
   };
@@ -395,22 +396,20 @@ const AnimatedBackground = () => {
           });
         },
         onLeaveBack: () => {
-          setActiveSection("hero");
-          gsap.to(kbd.scale, { ...keyboardStates("hero").scale, duration: 1 });
+          setActiveSection("about");
+          gsap.to(kbd.scale, { ...keyboardStates("about").scale, duration: 1 });
           gsap.to(kbd.position, {
-            ...keyboardStates("hero").position,
+            ...keyboardStates("about").position,
             duration: 1,
           });
           gsap.to(kbd.rotation, {
-            ...keyboardStates("hero").rotation,
+            ...keyboardStates("about").rotation,
             duration: 1,
           });
-          // gsap.to(kbd.rotation, { x: 0, duration: 1 });
         },
       },
     });
 
-    // Added #about timeline for smooth scroll flow
     gsap.timeline({
       scrollTrigger: {
         trigger: "#about",
@@ -446,7 +445,6 @@ const AnimatedBackground = () => {
         },
       },
     });
-
     gsap.timeline({
       scrollTrigger: {
         trigger: "#projects",
