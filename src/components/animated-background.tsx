@@ -154,7 +154,7 @@ const AnimatedBackground = () => {
     if (!selectedSkill || !splineApp) return;
     splineApp.setVariable("heading", selectedSkill.label);
     splineApp.setVariable("desc", selectedSkill.shortDescription);
-  }, [selectedSkill, isMobile]);
+  }, [selectedSkill]);
 
   // handle keyboard heading and desc visibility
   useEffect(() => {
@@ -191,7 +191,6 @@ const AnimatedBackground = () => {
       });
     }
 
-
     if (activeSection !== "skills") {
       textDesktopDark.visible = false;
       textDesktopLight.visible = false;
@@ -222,7 +221,13 @@ const AnimatedBackground = () => {
     }
   }, [theme, splineApp, isMobile, activeSection]);
 
-
+  // initialize gsap animations
+  useEffect(() => {
+    handleSplineInteractions();
+    handleGsapAnimations();
+    setBongoAnimation(getBongoAnimation());
+    setKeycapAnimtations(getKeycapsAnimation());
+  }, [splineApp]);
 
   useEffect(() => {
     let rotateKeyboard: gsap.core.Tween;
@@ -254,6 +259,7 @@ const AnimatedBackground = () => {
           repeat: -1,
           yoyo: true,
           yoyoEase: true,
+          // ease: "none",
           delay: 2.5,
           immediateRender: false,
           paused: true,
@@ -330,43 +336,37 @@ const AnimatedBackground = () => {
 
     const allObjects = splineApp.getAllObjects();
     const keycaps = allObjects.filter((obj) => obj.name === "keycap");
-    const mobileKeyCaps = allObjects.filter((obj) => obj.name === "keycap-mobile");
-    const desktopKeyCaps = allObjects.filter((obj) => obj.name === "keycap-desktop");
-
     await sleep(900);
-
-    // Initial cleanup to prevent z-fighting
-    keycaps.forEach(obj => obj.visible = false);
-    mobileKeyCaps.forEach(obj => obj.visible = isMobile);
-    desktopKeyCaps.forEach(obj => obj.visible = !isMobile);
-
-    // Animate generic keycaps
-    keycaps.forEach(async (keycap, idx) => {
-      await sleep(idx * 70);
-      keycap.visible = true;
-      gsap.fromTo(
-        keycap.position,
-        { y: 200 },
-        { y: 0, duration: 0.5, delay: 0.1, ease: "bounce.out" }
+    if (isMobile) {
+      const mobileKeyCaps = allObjects.filter(
+        (obj) => obj.name === "keycap-mobile"
       );
-    });
-
-    if (!isMobile) {
+      mobileKeyCaps.forEach((keycap, idx) => {
+        keycap.visible = true;
+      });
+    } else {
+      const desktopKeyCaps = allObjects.filter(
+        (obj) => obj.name === "keycap-desktop"
+      );
       desktopKeyCaps.forEach(async (keycap, idx) => {
         await sleep(idx * 70);
         keycap.visible = true;
       });
     }
+    keycaps.forEach(async (keycap, idx) => {
+      keycap.visible = false;
+      await sleep(idx * 70);
+      keycap.visible = true;
+      gsap.fromTo(
+        keycap.position,
+        { y: 200 },
+        { y: 50, duration: 0.5, delay: 0.1, ease: "bounce.out" }
+      );
+    });
   };
-
   const handleSplineInteractions = () => {
     if (!splineApp) return;
     splineApp.addEventListener("keyUp", (e) => {
-      if (!splineApp) return;
-      splineApp.setVariable("heading", "");
-      splineApp.setVariable("desc", "");
-    });
-    splineApp.addEventListener("mouseUp", (e) => {
       if (!splineApp) return;
       splineApp.setVariable("heading", "");
       splineApp.setVariable("desc", "");
@@ -375,15 +375,19 @@ const AnimatedBackground = () => {
       if (!splineApp) return;
       const skill = SKILLS[e.target.name as SkillNames];
       if (skill) setSelectedSkill(skill);
+      splineApp.setVariable("heading", skill.label);
+      splineApp.setVariable("desc", skill.shortDescription);
     });
+    // Add mouseDown listener for mobile interaction
     splineApp.addEventListener("mouseDown", (e) => {
       if (!splineApp) return;
       const skill = SKILLS[e.target.name as SkillNames];
       if (skill) setSelectedSkill(skill);
+      splineApp.setVariable("heading", skill.label);
+      splineApp.setVariable("desc", skill.shortDescription);
     });
     splineApp.addEventListener("mouseHover", handleMouseHover);
   };
-
   const handleGsapAnimations = () => {
     if (!splineApp) return;
     const kbd: SPEObject | undefined = splineApp.findObjectByName("keyboard");
@@ -417,17 +421,16 @@ const AnimatedBackground = () => {
           });
         },
         onLeaveBack: () => {
-          setActiveSection("hero");
-          gsap.to(kbd.scale, { ...keyboardStates("hero").scale, duration: 1 });
+          setActiveSection("about");
+          gsap.to(kbd.scale, { ...keyboardStates("about").scale, duration: 1 });
           gsap.to(kbd.position, {
-            ...keyboardStates("hero").position,
+            ...keyboardStates("about").position,
             duration: 1,
           });
           gsap.to(kbd.rotation, {
-            ...keyboardStates("hero").rotation,
+            ...keyboardStates("about").rotation,
             duration: 1,
           });
-          // gsap.to(kbd.rotation, { x: 0, duration: 1 });
         },
       },
     });
@@ -471,9 +474,10 @@ const AnimatedBackground = () => {
     gsap.timeline({
       scrollTrigger: {
         trigger: "#projects",
-        start: "top 50%",
+        start: "top 70%",
         end: "bottom bottom",
         scrub: true,
+        // markers: true,
         onEnter: () => {
           setActiveSection("projects");
           gsap.to(kbd.scale, {
@@ -490,29 +494,29 @@ const AnimatedBackground = () => {
           });
         },
         onLeaveBack: () => {
-          setActiveSection("about");
+          setActiveSection("skills");
           gsap.to(kbd.scale, {
-            ...keyboardStates("about").scale,
+            ...keyboardStates("skills").scale,
             duration: 1,
           });
           gsap.to(kbd.position, {
-            ...keyboardStates("about").position,
+            ...keyboardStates("skills").position,
             duration: 1,
           });
           gsap.to(kbd.rotation, {
-            ...keyboardStates("about").rotation,
+            ...keyboardStates("skills").rotation,
             duration: 1,
           });
         },
       },
     });
-
     gsap.timeline({
       scrollTrigger: {
         trigger: "#contact",
-        start: "top 50%",
+        start: "top 30%",
         end: "bottom bottom",
         scrub: true,
+        // markers: true,
         onEnter: () => {
           setActiveSection("contact");
           gsap.to(kbd.scale, {
@@ -547,7 +551,6 @@ const AnimatedBackground = () => {
       },
     });
   };
-
   const getBongoAnimation = () => {
     const framesParent = splineApp?.findObjectByName("bongo-cat");
     const frame1 = splineApp?.findObjectByName("frame-1");
@@ -578,7 +581,6 @@ const AnimatedBackground = () => {
     };
     return { start, stop };
   };
-
   const getKeycapsAnimation = () => {
     if (!splineApp) return { start: () => { }, stop: () => { } };
 
@@ -622,16 +624,6 @@ const AnimatedBackground = () => {
     };
     return { start, stop };
   };
-
-  // initialize gsap animations
-  useEffect(() => {
-    if (!splineApp) return;
-    handleSplineInteractions();
-    handleGsapAnimations();
-    setBongoAnimation(getBongoAnimation());
-    setKeycapAnimtations(getKeycapsAnimation());
-  }, [splineApp]);
-
   return (
     <>
       <Suspense fallback={<div>Loading...</div>}>
