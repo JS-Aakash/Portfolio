@@ -94,7 +94,7 @@ const AnimatedBackground = () => {
 
   // Unified Interaction Handler
   const handleAction = useCallback((e: SplineEvent) => {
-    if (!splineApp || !e.target) return;
+    if (!splineApp || !e.target || activeSection !== "skills") return;
     const now = Date.now();
 
     // Throttle dispatches to once per 500ms to prevent duplicates from overlapping events
@@ -121,7 +121,7 @@ const AnimatedBackground = () => {
       splineApp.setVariable("heading", skill.label);
       splineApp.setVariable("desc", skill.shortDescription);
     }
-  }, [splineApp, isMobile]);
+  }, [splineApp, isMobile, activeSection]);
 
   useEffect(() => {
     if (!splineApp) return;
@@ -196,12 +196,18 @@ const AnimatedBackground = () => {
           gsap.to(kbd.position, { ...keyboardStates(s as Section).position, duration: 1 });
           gsap.to(kbd.rotation, { ...keyboardStates(s as Section).rotation, duration: 1 });
         },
+        onLeave: () => {
+          window.dispatchEvent(new CustomEvent("clear-falling-skills"));
+        },
         onEnterBack: () => {
           setActiveSection(s as Section);
           window.dispatchEvent(new CustomEvent("clear-falling-skills"));
           gsap.to(kbd.scale, { ...keyboardStates(s as Section).scale, duration: 1 });
           gsap.to(kbd.position, { ...keyboardStates(s as Section).position, duration: 1 });
           gsap.to(kbd.rotation, { ...keyboardStates(s as Section).rotation, duration: 1 });
+        },
+        onLeaveBack: () => {
+          window.dispatchEvent(new CustomEvent("clear-falling-skills"));
         }
       });
     });
