@@ -15,7 +15,7 @@
     Professional, modern portfolio showcasing immersive 3D experiences, specialized technical skills, and high-impact projects.
     <br />
     <br />
-    <a href="https://js-aakash.github.io"><strong> View Live Preview »</strong></a>
+    <a href="https://aakashjs.vercel.app"><strong> View Live Preview »</strong></a>
   </p>
 </div>
 
@@ -26,10 +26,11 @@
 This is my **personal 3D portfolio website**, designed to push the boundaries of traditional web portfolios. It combines cutting-edge 3D interactions with a sleek, modern aesthetic to tell my story as a developer.
 
 ### ✨ Key Features
-- **🧬 Neural Profile Scanner**: A Lando Norris-inspired interactive hero section with real-time mask reveal and technical HUD.
+- **🧬 Neural Profile HUD**: A technical hero section with real-time mask reveal and interactive tech decorations.
 - **⌨️ 3D Interactive Keyboard**: A custom Spline-built keyboard where every keycap reveals a specialized skill with dynamic metadata.
-- **📱 Fully Responsive**: Optimized for every screen size, from high-end desktop monitors to mobile devices, with unique interactions for each.
-- **🎨 Premium Aesthetics**: Features glassmorphism, smooth GSAP animations, and tailored color gradients for maximum visual impact.
+- **🌠 Falling Skill Cards**: An immersive mobile interaction where tapping keys on the 3D keyboard triggers physical skill cards falling through the UI.
+- **📱 Fully Responsive**: Optimized for every screen size, from high-end desktop monitors to mobile devices, utilizing `dvh` units for stable layouts.
+- **🎨 Premium Aesthetics**: Features glassmorphism, GSAP orchestration, and tailored color gradients for maximum visual impact.
 - **📄 Full-Spectrum Showcase**: Detailed sections for About, Skills (3D), Projects, Certifications, and a working Contact portal.
 
 ---
