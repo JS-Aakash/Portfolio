@@ -13,7 +13,7 @@ const CertificationsSection = () => {
                 <h2
                     className={cn(
                         "bg-clip-text text-4xl text-center text-transparent md:text-7xl pt-10 md:pt-16",
-                        "bg-gradient-to-b from-white/90 to-white/60",
+                        "bg-gradient-to-b from-white/90 to-white/60 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]",
                         "dark:bg-gradient-to-b dark:from-white/90 dark:to-white/60 mb-8 md:mb-12"
                     )}
                 >
@@ -21,7 +21,7 @@ const CertificationsSection = () => {
                 </h2>
             </Link>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 pb-16">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 pb-16">
                 {certifications.map((cert) => (
                     <CertificationCard key={cert.id} certification={cert} />
                 ))}
@@ -32,79 +32,55 @@ const CertificationsSection = () => {
 
 const CertificationCard = ({ certification }: { certification: Certification }) => {
     return (
-        <div
-            className={cn(
-                "group relative overflow-hidden rounded-xl",
-                "bg-white/10 dark:bg-black/40 backdrop-blur-md",
-                "border border-gray-300/30 dark:border-white/20",
-                "hover:border-purple-500/50 dark:hover:border-purple-400/50",
-                "transition-all duration-300 ease-in-out",
-                "hover:shadow-2xl hover:shadow-purple-500/20 dark:hover:shadow-purple-400/30",
-                "hover:-translate-y-1",
-                "flex flex-col h-full"
-            )}
-        >
-            {/* Certificate Image */}
-            <div className="relative w-full h-72 overflow-hidden bg-gray-200 dark:bg-gray-800">
+        <div className="flex items-center justify-center p-2">
+            <div
+                className={cn(
+                    "group relative overflow-hidden rounded-lg w-full max-w-[320px] md:max-w-[400px]", // Desktop matches projects, mobile is compact
+                    "transition-all duration-500 ease-in-out",
+                    "border border-white/20 hover:border-purple-500/50",
+                    "shadow-[0_0_20px_rgba(168,85,247,0.5)]",
+                    "hover:shadow-[0_0_30px_rgba(168,85,247,0.5)]",
+                    "dark:hover:shadow-[0_0_30px_rgba(168,85,247,0.2)]",
+                    "hover:-translate-y-1",
+                    "cursor-pointer"
+                )}
+                style={{ aspectRatio: "3/2" }}
+            >
                 <Image
                     src={certification.certificateImage}
                     alt={certification.title}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
                     quality={95}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
 
-                {/* Award Icon Badge */}
-                <div className="absolute top-3 right-3 p-1.5 rounded-full bg-white/30 dark:bg-black/40 backdrop-blur-md border border-white/40">
-                    <Award className="w-4 h-4 text-yellow-400 drop-shadow-md" />
-                </div>
-            </div>
+                {/* Overlay text (Exactly like Projects) */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
 
-            {/* Content */}
-            <div className="flex flex-col flex-grow p-4 z-10">
-                {/* Title */}
-                <h3 className="text-lg font-bold mb-1 text-gray-900 dark:text-gray-100 line-clamp-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
-                    {certification.title}
-                </h3>
-
-                {/* Issuer */}
-                <p className="text-xs text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
-                    <span className="font-semibold bg-purple-100/50 dark:bg-purple-900/40 px-2 py-0.5 rounded text-purple-800 dark:text-purple-200">
-                        {certification.issuer}
-                    </span>
-                </p>
-
-                {/* Date */}
-                <div className="mb-3">
-                    <div className="flex items-center gap-2 text-[10px] font-medium text-gray-700 dark:text-gray-300">
-                        <Calendar className="w-3.5 h-3.5 text-purple-500" />
-                        <span>Issued {certification.issueDate}</span>
+                <div className="absolute bottom-0 left-0 p-4 w-full">
+                    <p className="text-white text-sm md:text-base font-semibold truncate mb-1">
+                        {certification.title}
+                    </p>
+                    <div className="flex items-center justify-between gap-2">
+                        <span className="text-[10px] bg-white text-black rounded-lg px-2 py-0.5 font-bold shrink-0">
+                            {certification.issuer}
+                        </span>
+                        <p className="text-[10px] text-white/60 truncate">
+                            {certification.issueDate}
+                        </p>
                     </div>
                 </div>
 
-                {/* Credential Link */}
+                {/* External Link (Top Corner) */}
                 {certification.credentialUrl && (
                     <Link
                         href={certification.credentialUrl}
                         target="_blank"
-                        rel="noopener noreferrer"
-                        className={cn(
-                            "mt-auto inline-flex items-center gap-2 text-xs font-bold",
-                            "text-purple-600 dark:text-purple-400",
-                            "hover:text-purple-700 dark:hover:text-purple-300",
-                            "transition-colors group/link underline-offset-4 hover:underline"
-                        )}
+                        className="absolute top-3 right-3 p-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/20 opacity-0 group-hover:opacity-100 transition-opacity"
                     >
-                        View Credential
-                        <ExternalLink className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
+                        <ExternalLink className="w-3.5 h-3.5 text-white" />
                     </Link>
                 )}
-            </div>
-
-            {/* Hover Gradient Border Effect */}
-            <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none border-2 border-purple-500/30">
             </div>
         </div>
     );

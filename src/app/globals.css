@@ -68,7 +68,12 @@ body {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.mask-fade-out {
+  mask-image: radial-gradient(circle, black 40%, transparent 80%);
 }

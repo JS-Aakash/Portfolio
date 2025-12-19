@@ -24,7 +24,7 @@ const ProjectsSection = () => {
         <h2
           className={cn(
             "bg-clip-text text-4xl text-center text-transparent md:text-7xl pt-6 md:pt-16",
-            "bg-gradient-to-b from-white/90 to-white/60",
+            "bg-gradient-to-b from-white/90 to-white/60 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]",
             "dark:bg-gradient-to-b dark:from-white/90 dark:to-white/60 mb-6 md:mb-8"
           )}
         >
@@ -45,7 +45,13 @@ const Modall = ({ project }: { project: Project }) => {
       <Modal>
         <ModalTrigger className="bg-transparent flex justify-center group/modal-btn w-full">
           <div
-            className="relative w-full max-w-[400px] h-auto rounded-lg overflow-hidden"
+            className={cn(
+              "relative w-full max-w-[450px] h-auto rounded-lg overflow-hidden transition-all duration-500",
+              "border border-white/20 group-hover/modal-btn:border-purple-500/50",
+              "shadow-[0_0_20px_rgba(168,85,247,0.5)]",
+              "group-hover/modal-btn:shadow-[0_0_30px_rgba(168,85,247,0.5)]",
+              "dark:group-hover/modal-btn:shadow-[0_0_30px_rgba(168,85,247,0.2)]"
+            )}
             style={{ aspectRatio: "3/2" }}
           >
             <Image
@@ -67,13 +73,13 @@ const Modall = ({ project }: { project: Project }) => {
             </div>
           </div>
         </ModalTrigger>
-        <ModalBody className="w-[95vw] max-w-4xl max-h-[85vh] md:max-h-[80vh] overflow-auto">
+        <ModalBody className="max-w-4xl">
           <SmoothScroll isInsideModal={true}>
             <ModalContent>
               <ProjectContents project={project} />
             </ModalContent>
           </SmoothScroll>
-          <ModalFooter className="gap-4">
+          <ModalFooter className="gap-2 md:gap-4">
             {/* Source Code Button */}
             {project.github && (
               <Link href={project.github} target="_blank">
@@ -106,11 +112,11 @@ export default ProjectsSection;
 const ProjectContents = ({ project }: { project: Project }) => {
   return (
     <>
-      <h4 className="text-lg md:text-2xl text-neutral-600 dark:text-neutral-100 font-bold text-center mb-8">
+      <h4 className="text-lg md:text-2xl text-neutral-600 dark:text-neutral-100 font-bold text-center mb-2 md:mb-8">
         {project.title}
       </h4>
       <div className="flex flex-col md:flex-row md:justify-evenly max-w-screen overflow-hidden md:overflow-visible">
-        <div className="flex flex-row md:flex-col-reverse justify-center items-center gap-2 text-3xl mb-8">
+        <div className="flex flex-row md:flex-col-reverse justify-center items-center gap-2 text-3xl mb-2 md:mb-8">
           <p className="text-sm mt-1 text-neutral-600 dark:text-neutral-500">
             Frontend
           </p>
@@ -119,7 +125,7 @@ const ProjectContents = ({ project }: { project: Project }) => {
           )}
         </div>
         {project.skills.backend?.length > 0 && (
-          <div className="flex flex-row md:flex-col-reverse justify-center items-center gap-2 text-3xl mb-8">
+          <div className="flex flex-row md:flex-col-reverse justify-center items-center gap-2 text-3xl mb-2 md:mb-8">
             <p className="text-sm mt-1 text-neutral-600 dark:text-neutral-500">
               Backend
             </p>

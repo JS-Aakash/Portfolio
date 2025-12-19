@@ -1,4 +1,4 @@
-const transition = { duration: 1, ease: [0.76, 0, 0.24, 1] };
+const transition = { duration: 0.25, ease: [0.76, 0, 0.24, 1] };
 
 export const opacity = {
   initial: {
@@ -6,11 +6,11 @@ export const opacity = {
   },
   open: {
     opacity: 1,
-    transition: { duration: 0.35 }
+    transition: { duration: 0.09 }
   },
   closed: {
     opacity: 0,
-    transition: { duration: 0.35 }
+    transition: { duration: 0.09 }
   }
 };
 
@@ -50,12 +50,12 @@ export const blur = {
   open: {
     filter: 'blur(4px)',
     opacity: 0.6,
-    transition: { duration: 0.3 }
+    transition: { duration: 0.075 }
   },
   closed: {
     filter: 'blur(0px)',
     opacity: 1,
-    transition: { duration: 0.3 }
+    transition: { duration: 0.075 }
   }
 };
 
@@ -67,11 +67,11 @@ export const translate = {
   enter: (i: any[]) => ({
     y: 0,
     opacity: 1,
-    transition: { duration: 1, ease: [0.76, 0, 0.24, 1], delay: i[0] }
+    transition: { duration: 0.25, ease: [0.76, 0, 0.24, 1], delay: i[0] }
   }),
   exit: (i: any[]) => ({
     y: '100%',
     opacity: 0,
-    transition: { duration: 0.7, ease: [0.76, 0, 0.24, 1], delay: i[1] }
+    transition: { duration: 0.175, ease: [0.76, 0, 0.24, 1], delay: i[1] }
   })
 };

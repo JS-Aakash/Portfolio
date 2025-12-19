@@ -1,11 +1,4 @@
-/**
- * Note: Use position fixed according to your needs
- * Desktop navbar is better positioned at the bottom
- * Mobile navbar is better positioned at bottom right.
- **/
-
 import { cn } from "@/lib/utils";
-// import { IconLayoutNavbarCollapse } from "@tabler/icons-react";
 import {
   AnimatePresence,
   MotionValue,
@@ -17,7 +10,7 @@ import {
 } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { opacity } from "../header/anim";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 export const FloatingDock = ({
   items,
@@ -80,12 +73,6 @@ const FloatingDockMobile = ({
           </motion.div>
         )}
       </AnimatePresence>
-      {/* <button
-        onClick={() => setOpen(!open)}
-        className="h-10 w-10 rounded-full bg-gray-50 dark:bg-neutral-800 flex items-center justify-center"
-      >
-        <IconLayoutNavbarCollapse className="h-5 w-5 text-neutral-500 dark:text-neutral-400" />
-      </button> */}
     </div>
   );
 };
@@ -101,8 +88,10 @@ const FloatingDockDesktop = ({
   const [showHint, setShowHint] = useState(true);
   const timer = useRef<NodeJS.Timeout>();
   const controls = useAnimation();
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
   useEffect(() => {
-    if (showHint) {
+    if (showHint && !isMobile) {
       controls.start({
         opacity: [0, 1, 1, 0],
         x: [-50, -50, 50, 50],
@@ -120,22 +109,22 @@ const FloatingDockDesktop = ({
     }
     return () => {
       controls.stop();
-      clearInterval(timer.current);
+      if (timer.current) clearInterval(timer.current);
     };
-  }, [showHint]);
+  }, [showHint, isMobile, controls]);
+
   return (
     <div className="relative h-fit flex items-center justify-center">
       <motion.div
         onMouseMove={(e) => {
+          if (isMobile) return;
           mouseX.set(e.pageX);
           setShowHint(false);
         }}
         onMouseLeave={() => mouseX.set(Infinity)}
         className={cn(
-          // "hidden md:flex",
           "flex gap-2 md:gap-4",
-          "mx-auto h-16 items-end  rounded-2xl bg-gray-50 dark:bg-neutral-900 px-4 pb-3",
-          // "blur-sm brightness-50",
+          "mx-auto h-16 items-center rounded-2xl bg-gray-50 dark:bg-neutral-900 px-4",
           className
         )}
       >
@@ -143,7 +132,7 @@ const FloatingDockDesktop = ({
           <IconContainer mouseX={mouseX} key={item.title} {...item} />
         ))}
       </motion.div>
-      {showHint && (
+      {showHint && !isMobile && (
         <div
           className="z-10 absolute t-0 w-full h-full pointer-events-none"
           onMouseEnter={() => setShowHint(false)}
@@ -151,7 +140,6 @@ const FloatingDockDesktop = ({
           <div
             className={cn(
               "relative w-full h-full flex items-center justify-center"
-              // "backdrop-blur-md"
             )}
           >
             <motion.div
@@ -179,10 +167,11 @@ function IconContainer({
   icon: React.ReactNode;
 }) {
   let ref = useRef<HTMLDivElement>(null);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   let distance = useTransform(mouseX, (val) => {
+    if (isMobile) return 0;
     let bounds = ref.current?.getBoundingClientRect() ?? { x: 0, width: 0 };
-
     return val - bounds.x - bounds.width / 2;
   });
 
@@ -223,13 +212,16 @@ function IconContainer({
   return (
     <motion.div
       ref={ref}
-      style={{ width, height }}
-      onMouseEnter={() => setHovered(true)}
+      style={{
+        width: isMobile ? 40 : width,
+        height: isMobile ? 40 : height,
+      }}
+      onMouseEnter={() => !isMobile && setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="aspect-square rounded-full bg-gray-200 dark:bg-neutral-800 flex items-center justify-center relative"
+      className="aspect-square rounded-full bg-gray-200 dark:bg-neutral-800 flex items-center justify-center relative pointer-events-none md:pointer-events-auto"
     >
       <AnimatePresence>
-        {hovered && (
+        {hovered && !isMobile && (
           <motion.div
             initial={{ opacity: 0, y: 10, x: "-50%" }}
             animate={{ opacity: 1, y: 0, x: "-50%" }}
@@ -241,7 +233,10 @@ function IconContainer({
         )}
       </AnimatePresence>
       <motion.div
-        style={{ width: widthIcon, height: heightIcon }}
+        style={{
+          width: isMobile ? 20 : widthIcon,
+          height: isMobile ? 20 : heightIcon,
+        }}
         className="flex items-center justify-center"
       >
         {icon}

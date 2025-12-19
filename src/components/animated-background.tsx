@@ -58,10 +58,10 @@ const STATES = {
     },
     mobile: {
       scale: { x: 0.18, y: 0.18, z: 0.18 },
-      position: { x: 0, y: 0, z: 0 },
+      position: { x: 0, y: -200, z: 0 },
       rotation: {
         x: 0,
-        y: 0,
+        y: -Math.PI / 24,
         z: 0,
       },
     },
@@ -154,7 +154,7 @@ const AnimatedBackground = () => {
     if (!selectedSkill || !splineApp) return;
     splineApp.setVariable("heading", selectedSkill.label);
     splineApp.setVariable("desc", selectedSkill.shortDescription);
-  }, [selectedSkill]);
+  }, [selectedSkill, isMobile]);
 
   // handle keyboard heading and desc visibility
   useEffect(() => {
@@ -170,6 +170,32 @@ const AnimatedBackground = () => {
       !textMobileLight
     )
       return;
+
+    // Reposition text for mobile
+    if (isMobile) {
+      const allObjects = splineApp.getAllObjects();
+      const mobileGroups = [textMobileLight, textMobileDark];
+
+      mobileGroups.forEach(group => {
+        const children = allObjects.filter(obj => (obj as any).parent?.name === group.name);
+        if (children.length >= 2) {
+          // Identify heading (larger scale) vs description
+          // If scales are equal, assume index 0 is heading based on common structure
+          const sortedChildren = [...children].sort((a, b) => b.scale.x - a.scale.x);
+          const heading = sortedChildren[0];
+          const desc = sortedChildren[1];
+
+          // Heading at Top
+          heading.position.y = 10;
+          heading.position.x = 0;
+
+          // Description at Bottom
+          desc.position.y = -210;
+          desc.position.x = 0;
+        }
+      });
+    }
+
     if (activeSection !== "skills") {
       textDesktopDark.visible = false;
       textDesktopLight.visible = false;
@@ -353,8 +379,8 @@ const AnimatedBackground = () => {
       if (!splineApp) return;
       const skill = SKILLS[e.target.name as SkillNames];
       if (skill) setSelectedSkill(skill);
-      splineApp.setVariable("heading", skill.label);
-      splineApp.setVariable("desc", skill.shortDescription);
+      // splineApp.setVariable("heading", skill.label);
+      // splineApp.setVariable("desc", skill.shortDescription);
     });
     splineApp.addEventListener("mouseHover", handleMouseHover);
   };

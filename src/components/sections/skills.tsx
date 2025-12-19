@@ -22,7 +22,7 @@ const SkillsSection = () => {
 
   return (
     <section id="skills" className="w-full h-[120dvh] md:h-[150dvh]">
-      <div className="top-[20%] sticky mb-20 md:mb-96">
+      <div className="top-16 sticky mb-20 md:mb-96">
         <Link href={"#skills"}>
           <BoxReveal width="100%">
             <h2
