@@ -344,7 +344,10 @@ const AnimatedBackground = () => {
     splineApp.addEventListener("keyDown", (e) => {
       if (!splineApp) return;
       const skill = SKILLS[e.target.name as SkillNames];
-      if (skill) setSelectedSkill(skill);
+      if (skill) {
+        setSelectedSkill(skill);
+        window.dispatchEvent(new CustomEvent("keyboard-press"));
+      }
       splineApp.setVariable("heading", skill.label);
       splineApp.setVariable("desc", skill.shortDescription);
     });
@@ -352,7 +355,10 @@ const AnimatedBackground = () => {
     splineApp.addEventListener("mouseDown", (e) => {
       if (!splineApp) return;
       const skill = SKILLS[e.target.name as SkillNames];
-      if (skill) setSelectedSkill(skill);
+      if (skill) {
+        setSelectedSkill(skill);
+        window.dispatchEvent(new CustomEvent("keyboard-press"));
+      }
       splineApp.setVariable("heading", skill?.label || "");
       splineApp.setVariable("desc", skill?.shortDescription || "");
     });

@@ -11,18 +11,16 @@ const SkillsSection = () => {
       setShowHint(false);
     };
 
-    window.addEventListener("keydown", handleInteraction);
-    window.addEventListener("click", handleInteraction);
+    window.addEventListener("keyboard-press", handleInteraction);
 
     return () => {
-      window.removeEventListener("keydown", handleInteraction);
-      window.removeEventListener("click", handleInteraction);
+      window.removeEventListener("keyboard-press", handleInteraction);
     };
   }, []);
 
   return (
     <section id="skills" className="w-full h-[120dvh] md:h-[150dvh] pointer-events-none">
-      <div className="top-16 sticky mb-20 md:mb-96 pointer-events-none">
+      <div className="top-16 sticky h-[80vh] flex flex-col items-center justify-between py-12 pointer-events-none">
         <Link href={"#skills"} className="pointer-events-auto">
           <BoxReveal width="100%">
             <h2
@@ -36,9 +34,14 @@ const SkillsSection = () => {
             </h2>
           </BoxReveal>
         </Link>
-        <div className={`transition-opacity duration-500 pointer-events-none ${showHint ? "opacity-100" : "opacity-0"}`}>
-          <p className="mx-auto mt-4 line-clamp-4 max-w-3xl font-normal text-base text-center text-neutral-300 pointer-events-auto">
-            (HINT: Press a key)
+
+        {/* Mobile only hint - positioned below center */}
+        <div className={cn(
+          "md:hidden transition-opacity duration-1000",
+          showHint ? "opacity-100" : "opacity-0"
+        )}>
+          <p className="font-mono text-[10px] tracking-[0.3em] text-white/30 animate-pulse uppercase">
+            Tap a key to reveal skills
           </p>
         </div>
       </div>
