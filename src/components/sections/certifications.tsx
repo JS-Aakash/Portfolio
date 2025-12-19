@@ -8,20 +8,20 @@ import { cn } from "@/lib/utils";
 
 const CertificationsSection = () => {
     return (
-        <section id="certifications" className="relative w-full min-h-[100dvh] py-20 px-4 sm:px-6 md:px-12 lg:px-24 flex flex-col items-center justify-center overflow-hidden pointer-events-none">
-            <Link href={"#certifications"}>
+        <section id="certifications" className="relative w-full py-20 md:py-32 px-4 sm:px-6 md:px-12 lg:px-24 pointer-events-none overflow-visible">
+            <Link href={"#certifications"} className="pointer-events-auto block w-fit mx-auto mb-10 md:mb-16">
                 <h2
                     className={cn(
-                        "bg-clip-text text-4xl text-center text-transparent md:text-7xl pt-10 md:pt-16",
+                        "bg-clip-text text-4xl text-center text-transparent md:text-7xl",
                         "bg-gradient-to-b from-white/90 to-white/60 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]",
-                        "dark:bg-gradient-to-b dark:from-white/90 dark:to-white/60 mb-8 md:mb-12"
+                        "dark:bg-gradient-to-b dark:from-white/90 dark:to-white/60"
                     )}
                 >
                     CERTIFICATIONS
                 </h2>
             </Link>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 pb-16">
+            <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 pb-16 pointer-events-auto">
                 {certifications.map((cert) => (
                     <CertificationCard key={cert.id} certification={cert} />
                 ))}
