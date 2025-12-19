@@ -26,11 +26,24 @@ export const FallingSkills = () => {
                 uniqueId: Date.now() + Math.random(),
             };
 
-            setActiveSkills((prev) => [...prev, newSkill]);
+            setActiveSkills((prev) => {
+                const next = [...prev, newSkill];
+                if (next.length > 3) return next.slice(-3);
+                return next;
+            });
+        };
+
+        const handleClear = () => {
+            console.log("FallingSkills: CLEARING ALL SKILLS due to section change");
+            setActiveSkills([]);
         };
 
         window.addEventListener("keyboard-press", handlePress);
-        return () => window.removeEventListener("keyboard-press", handlePress);
+        window.addEventListener("clear-falling-skills", handleClear);
+        return () => {
+            window.removeEventListener("keyboard-press", handlePress);
+            window.removeEventListener("clear-falling-skills", handleClear);
+        };
     }, []);
 
     const removeSkill = (uid: number) => {

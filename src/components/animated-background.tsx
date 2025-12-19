@@ -90,9 +90,16 @@ const AnimatedBackground = () => {
   const keyboardStates = useCallback((section: Section) => {
     return STATES[section][isMobile ? "mobile" : "desktop"];
   }, [isMobile]);
+  const lastDispatchTime = useRef<number>(0);
 
+  // Unified Interaction Handler
   const handleAction = useCallback((e: SplineEvent) => {
     if (!splineApp || !e.target) return;
+    const now = Date.now();
+
+    // Throttle dispatches to once per 500ms to prevent duplicates from overlapping events
+    if (now - lastDispatchTime.current < 500) return;
+
     const name = e.target.name;
 
     console.log(`%c Spline Interaction on ${name}`, 'background: #222; color: #bada55');
@@ -106,6 +113,7 @@ const AnimatedBackground = () => {
     }
 
     if (skill) {
+      lastDispatchTime.current = now;
       console.log(`%c MATCH FOUND: ${skill.label}`, 'font-weight: bold; color: cyan');
       if (isMobile) {
         window.dispatchEvent(new CustomEvent("keyboard-press", { detail: skill }));
@@ -113,7 +121,7 @@ const AnimatedBackground = () => {
       splineApp.setVariable("heading", skill.label);
       splineApp.setVariable("desc", skill.shortDescription);
     }
-  }, [splineApp]);
+  }, [splineApp, isMobile]);
 
   useEffect(() => {
     if (!splineApp) return;
@@ -183,12 +191,14 @@ const AnimatedBackground = () => {
         end: "bottom 50%",
         onEnter: () => {
           setActiveSection(s as Section);
+          window.dispatchEvent(new CustomEvent("clear-falling-skills"));
           gsap.to(kbd.scale, { ...keyboardStates(s as Section).scale, duration: 1 });
           gsap.to(kbd.position, { ...keyboardStates(s as Section).position, duration: 1 });
           gsap.to(kbd.rotation, { ...keyboardStates(s as Section).rotation, duration: 1 });
         },
         onEnterBack: () => {
           setActiveSection(s as Section);
+          window.dispatchEvent(new CustomEvent("clear-falling-skills"));
           gsap.to(kbd.scale, { ...keyboardStates(s as Section).scale, duration: 1 });
           gsap.to(kbd.position, { ...keyboardStates(s as Section).position, duration: 1 });
           gsap.to(kbd.rotation, { ...keyboardStates(s as Section).rotation, duration: 1 });
@@ -217,10 +227,9 @@ const AnimatedBackground = () => {
   }, [activeSection, router]);
 
   return (
-    <div className="w-full h-full relative" style={{ touchAction: "none" }}>
+    <div className="w-full h-full relative" style={{ touchAction: "pan-y" }}>
       <Suspense fallback={<div className="flex items-center justify-center h-full text-white">Loading...</div>}>
         <Spline
-          style={{ touchAction: "none" }}
           onLoad={(app) => {
             console.log("AnimatedBackground: Spline LOAD Success");
             setSplineApp(app);
