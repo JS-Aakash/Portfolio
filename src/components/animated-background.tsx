@@ -58,10 +58,10 @@ const STATES = {
     },
     mobile: {
       scale: { x: 0.18, y: 0.18, z: 0.18 },
-      position: { x: 0, y: 0, z: 0 },
+      position: { x: 0, y: -200, z: 0 },
       rotation: {
         x: 0,
-        y: 0,
+        y: Math.PI / 36,
         z: 0,
       },
     },
@@ -318,31 +318,23 @@ const AnimatedBackground = () => {
 
     const allObjects = splineApp.getAllObjects();
     const keycaps = allObjects.filter((obj) => obj.name === "keycap");
+    const mobileKeyCaps = allObjects.filter((obj) => obj.name === "keycap-mobile");
+    const desktopKeyCaps = allObjects.filter((obj) => obj.name === "keycap-desktop");
+
     await sleep(900);
-    if (isMobile) {
-      const mobileKeyCaps = allObjects.filter(
-        (obj) => obj.name === "keycap-mobile"
-      );
-      mobileKeyCaps.forEach((keycap, idx) => {
-        keycap.visible = true;
-      });
-    } else {
-      const desktopKeyCaps = allObjects.filter(
-        (obj) => obj.name === "keycap-desktop"
-      );
-      desktopKeyCaps.forEach(async (keycap, idx) => {
-        await sleep(idx * 70);
-        keycap.visible = true;
-      });
-    }
+
+    // Initial visibility sync to prevent z-fighting shadows
+    keycaps.forEach(obj => obj.visible = false);
+    mobileKeyCaps.forEach(obj => obj.visible = isMobile);
+    desktopKeyCaps.forEach(obj => obj.visible = !isMobile);
+
     keycaps.forEach(async (keycap, idx) => {
-      keycap.visible = false;
       await sleep(idx * 70);
       keycap.visible = true;
       gsap.fromTo(
         keycap.position,
         { y: 200 },
-        { y: 50, duration: 0.5, delay: 0.1, ease: "bounce.out" }
+        { y: 0, duration: 0.5, delay: 0.1, ease: "bounce.out" }
       );
     });
   };
