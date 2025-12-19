@@ -21,9 +21,9 @@ const SkillsSection = () => {
   }, []);
 
   return (
-    <section id="skills" className="w-full h-[120dvh] md:h-[150dvh]">
-      <div className="top-16 sticky mb-20 md:mb-96">
-        <Link href={"#skills"}>
+    <section id="skills" className="w-full h-[120dvh] md:h-[150dvh] pointer-events-none">
+      <div className="top-16 sticky mb-20 md:mb-96 pointer-events-none">
+        <Link href={"#skills"} className="pointer-events-auto">
           <BoxReveal width="100%">
             <h2
               className={cn(
@@ -36,8 +36,8 @@ const SkillsSection = () => {
             </h2>
           </BoxReveal>
         </Link>
-        <div className={`transition-opacity duration-500 ${showHint ? "opacity-100" : "opacity-0"}`}>
-          <p className="mx-auto mt-4 line-clamp-4 max-w-3xl font-normal text-base text-center text-neutral-300">
+        <div className={`transition-opacity duration-500 pointer-events-none ${showHint ? "opacity-100" : "opacity-0"}`}>
+          <p className="mx-auto mt-4 line-clamp-4 max-w-3xl font-normal text-base text-center text-neutral-300 pointer-events-auto">
             (HINT: Press a key)
           </p>
         </div>

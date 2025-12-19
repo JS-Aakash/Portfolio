@@ -22,17 +22,18 @@ const HeroSection = () => {
   const { isLoading } = usePreloader();
 
   return (
-    <section id="hero" className={cn("relative w-full h-screen")}>
-      <div className="grid md:grid-cols-12 h-full items-center px-4 sm:px-6">
+    <section id="hero" className={cn("relative w-full h-screen pointer-events-none")}>
+      <div className="grid md:grid-cols-12 h-full items-center px-4 sm:px-6 pointer-events-none">
         <div
           className={cn(
             "z-[2] col-span-12 md:col-span-5 pt-10 md:pt-0",
             "flex flex-col justify-center items-center md:items-start",
-            "w-full md:pl-8 lg:pl-16 xl:pl-24"
+            "w-full md:pl-8 lg:pl-16 xl:pl-24",
+            "pointer-events-none"
           )}
         >
           {!isLoading && (
-            <>
+            <div className="pointer-events-auto">
               <div className="w-full max-w-md md:max-w-none">
                 <BlurIn delay={0.7}>
                   <p
@@ -130,16 +131,16 @@ const HeroSection = () => {
                   </div>
                 </BlurIn>
               </div>
-            </>
+            </div>
           )}
         </div>
-        <div className="col-span-12 md:col-span-4 flex items-center justify-center z-[2] mt-8 md:mt-0 -translate-y-[50px] md:translate-y-0 md:-translate-x-[175px]">
+        <div className="col-span-12 md:col-span-4 flex items-center justify-center z-[2] mt-8 md:mt-0 -translate-y-[50px] md:translate-y-0 md:-translate-x-[175px] pointer-events-auto">
           <BlurIn delay={1.5}>
             <TechProfileImage />
           </BlurIn>
         </div>
       </div>
-      <div className="absolute bottom-10 left-[50%] translate-x-[-50%]">
+      <div className="absolute bottom-10 left-[50%] translate-x-[-50%] pointer-events-auto">
         <ScrollDownIcon />
       </div>
     </section>
