@@ -125,37 +125,7 @@ const AnimatedBackground = () => {
     }
   }, [splineApp, isMobile, activeSection]);
 
-  useEffect(() => {
-    if (!splineApp) return;
 
-    console.log("AnimatedBackground: Setting up Spline event listeners");
-
-    const handleUp = () => {
-      if (splineApp) {
-        splineApp.setVariable("heading", "");
-        splineApp.setVariable("desc", "");
-      }
-    };
-
-    splineApp.addEventListener("mouseDown", handleAction);
-    splineApp.addEventListener("mouseHover", handleAction);
-    splineApp.addEventListener("keyDown", handleAction);
-    splineApp.addEventListener("mouseUp", handleUp);
-    splineApp.addEventListener("keyUp", handleUp);
-
-    setBongoAnimation(getBongoAnimation());
-    setKeycapAnimations(getKeycapsAnimation());
-
-    return () => {
-      if (splineApp) {
-        splineApp.removeEventListener("mouseDown", handleAction);
-        splineApp.removeEventListener("mouseHover", handleAction);
-        splineApp.removeEventListener("keyDown", handleAction);
-        splineApp.removeEventListener("mouseUp", handleUp);
-        splineApp.removeEventListener("keyUp", handleUp);
-      }
-    };
-  }, [splineApp, handleAction, getBongoAnimation, getKeycapsAnimation]);
 
   useEffect(() => {
     if (!splineApp || isLoading || keyboardRevealed) return;
@@ -359,6 +329,38 @@ const AnimatedBackground = () => {
       if (rotateKeyboard) rotateKeyboard.kill();
     };
   }, [activeSection, splineApp, bongoAnimation, keycapAnimations]);
+
+  useEffect(() => {
+    if (!splineApp) return;
+
+    console.log("AnimatedBackground: Setting up Spline event listeners");
+
+    const handleUp = () => {
+      if (splineApp) {
+        splineApp.setVariable("heading", "");
+        splineApp.setVariable("desc", "");
+      }
+    };
+
+    splineApp.addEventListener("mouseDown", handleAction);
+    splineApp.addEventListener("mouseHover", handleAction);
+    splineApp.addEventListener("keyDown", handleAction);
+    splineApp.addEventListener("mouseUp", handleUp);
+    splineApp.addEventListener("keyUp", handleUp);
+
+    setBongoAnimation(getBongoAnimation());
+    setKeycapAnimations(getKeycapsAnimation());
+
+    return () => {
+      if (splineApp) {
+        splineApp.removeEventListener("mouseDown", handleAction);
+        splineApp.removeEventListener("mouseHover", handleAction);
+        splineApp.removeEventListener("keyDown", handleAction);
+        splineApp.removeEventListener("mouseUp", handleUp);
+        splineApp.removeEventListener("keyUp", handleUp);
+      }
+    };
+  }, [splineApp, handleAction, getBongoAnimation, getKeycapsAnimation]);
 
   return (
     <div className="w-full h-full relative" style={{ touchAction: "pan-y" }}>
