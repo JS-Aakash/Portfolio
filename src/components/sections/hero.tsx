@@ -22,11 +22,11 @@ const HeroSection = () => {
   const { isLoading } = usePreloader();
 
   return (
-    <section id="hero" className={cn("relative w-full min-h-[100dvh] flex flex-col pointer-events-none")}>
-      <div className="grid md:grid-cols-12 flex-1 items-center px-4 sm:px-6 gap-12 md:gap-0 pointer-events-none">
+    <section id="hero" className={cn("relative w-full h-[100dvh] pointer-events-none")}>
+      <div className="grid md:grid-cols-12 h-full items-center px-4 sm:px-6 pointer-events-none">
         <div
           className={cn(
-            "z-[2] col-span-12 md:col-span-5 pt-24 sm:pt-32 md:pt-0",
+            "z-[2] col-span-12 md:col-span-5 pt-[60px] md:pt-0",
             "flex flex-col justify-center items-center md:items-start",
             "w-full md:pl-8 lg:pl-16 xl:pl-24",
             "pointer-events-none"
@@ -136,7 +136,7 @@ const HeroSection = () => {
             </div>
           )}
         </div>
-        <div className="col-span-12 md:col-span-4 flex items-center justify-center z-[2] mt-4 md:mt-0 md:-translate-x-[175px] pointer-events-auto">
+        <div className="col-span-12 md:col-span-4 flex items-center justify-center z-[2] mt-8 md:mt-0 -translate-y-[50px] md:translate-y-0 md:-translate-x-[175px] pointer-events-auto">
           <BlurIn delay={1.5}>
             <TechProfileImage />
           </BlurIn>
