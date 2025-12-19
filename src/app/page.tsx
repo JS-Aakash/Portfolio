@@ -10,10 +10,12 @@ import CertificationsSection from "@/components/sections/certifications";
 import ContactSection from "@/components/sections/contact";
 import HeroSection from "@/components/sections/hero";
 import AboutSection from "@/components/sections/about";
+import { FallingSkills } from "@/components/falling-skills";
 
 function MainPage() {
   return (
     <>
+      <FallingSkills />
       <SmoothScroll>
         <main className={cn("bg-slate-100 dark:bg-transparent")}>
           <div className="top-0 z-0 fixed w-full h-screen">

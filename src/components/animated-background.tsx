@@ -346,7 +346,7 @@ const AnimatedBackground = () => {
       const skill = SKILLS[e.target.name as SkillNames];
       if (skill) {
         setSelectedSkill(skill);
-        window.dispatchEvent(new CustomEvent("keyboard-press"));
+        window.dispatchEvent(new CustomEvent("keyboard-press", { detail: skill }));
       }
       splineApp.setVariable("heading", skill.label);
       splineApp.setVariable("desc", skill.shortDescription);
@@ -357,7 +357,7 @@ const AnimatedBackground = () => {
       const skill = SKILLS[e.target.name as SkillNames];
       if (skill) {
         setSelectedSkill(skill);
-        window.dispatchEvent(new CustomEvent("keyboard-press"));
+        window.dispatchEvent(new CustomEvent("keyboard-press", { detail: skill }));
       }
       splineApp.setVariable("heading", skill?.label || "");
       splineApp.setVariable("desc", skill?.shortDescription || "");
