@@ -19,7 +19,7 @@ const SkillsSection = () => {
   }, []);
 
   return (
-    <section id="skills" className="w-full h-[120dvh] md:h-[150dvh] pointer-events-none">
+    <section id="skills" className="relative w-full h-[100dvh] pointer-events-none">
       <div className="top-16 sticky h-[80vh] flex flex-col items-center justify-between py-12 pointer-events-none">
         <Link href={"#skills"} className="pointer-events-auto">
           <BoxReveal width="100%">

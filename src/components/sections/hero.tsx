@@ -22,7 +22,7 @@ const HeroSection = () => {
   const { isLoading } = usePreloader();
 
   return (
-    <section id="hero" className={cn("relative w-full h-screen pointer-events-none")}>
+    <section id="hero" className={cn("relative w-full h-[100dvh] pointer-events-none")}>
       <div className="grid md:grid-cols-12 h-full items-center px-4 sm:px-6 pointer-events-none">
         <div
           className={cn(

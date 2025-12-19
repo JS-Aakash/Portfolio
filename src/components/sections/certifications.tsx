@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 const CertificationsSection = () => {
     return (
-        <section id="certifications" className="min-h-screen max-w-7xl mx-auto px-4 sm:px-6">
+        <section id="certifications" className="relative w-full min-h-[100dvh] py-20 px-4 sm:px-6 md:px-12 lg:px-24 flex flex-col items-center justify-center overflow-hidden pointer-events-none">
             <Link href={"#certifications"}>
                 <h2
                     className={cn(
