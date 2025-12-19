@@ -4,11 +4,11 @@ import { BoxReveal } from "../reveal-animations";
 import { cn } from "@/lib/utils";
 
 const SkillsSection = () => {
-  const [showHint, setShowHint] = useState(true);
+  const [clickCount, setClickCount] = useState(0);
 
   useEffect(() => {
     const handleInteraction = () => {
-      setShowHint(false);
+      setClickCount((prev) => prev + 1);
     };
 
     window.addEventListener("keyboard-press", handleInteraction);
@@ -35,13 +35,13 @@ const SkillsSection = () => {
           </BoxReveal>
         </Link>
 
-        {/* Mobile only hint - positioned below center */}
+        {/* Mobile only hint - positioned higher for visibility */}
         <div className={cn(
-          "md:hidden transition-opacity duration-1000",
-          showHint ? "opacity-100" : "opacity-0"
+          "md:hidden transition-all duration-1000 mb-32",
+          clickCount < 3 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
         )}>
-          <p className="font-mono text-[10px] tracking-[0.3em] text-white/30 animate-pulse uppercase">
-            Tap a key to reveal skills
+          <p className="font-mono text-xs tracking-[0.3em] text-white/70 animate-pulse uppercase bg-black/20 backdrop-blur-sm px-4 py-2 rounded-full border border-white/10">
+            Tap keys to reveal skills
           </p>
         </div>
       </div>

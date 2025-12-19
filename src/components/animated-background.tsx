@@ -159,7 +159,7 @@ const AnimatedBackground = () => {
     const kbd = splineApp.findObjectByName("keyboard");
     if (!kbd) return;
 
-    ["hero", "about", "skills", "projects", "contact"].forEach((s) => {
+    ["hero", "about", "skills", "projects", "contact"].forEach((s, idx) => {
       ScrollTrigger.create({
         trigger: `#${s}`,
         start: "top 85%",
@@ -183,6 +183,13 @@ const AnimatedBackground = () => {
         },
         onLeaveBack: () => {
           window.dispatchEvent(new CustomEvent("clear-falling-skills"));
+          if (idx > 0) {
+            const prev = ["hero", "about", "skills", "projects", "contact"][idx - 1] as Section;
+            setActiveSection(prev);
+            gsap.to(kbd.scale, { ...keyboardStates(prev).scale, duration: 1 });
+            gsap.to(kbd.position, { ...keyboardStates(prev).position, duration: 1 });
+            gsap.to(kbd.rotation, { ...keyboardStates(prev).rotation, duration: 1 });
+          }
         }
       });
     });
