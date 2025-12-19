@@ -94,7 +94,7 @@ export const SKILLS: Record<SkillNames, Skill> = {
     label: "Tailwind",
     shortDescription: "A utility-first CSS framework for rapidly building custom user interfaces.",
     color: "#38bdf8",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg",
   },
   [SkillNames.NODEJS]: {
     id: 9,
@@ -174,7 +174,7 @@ export const SKILLS: Record<SkillNames, Skill> = {
     label: "AWS",
     shortDescription: "Comprehensive cloud computing platform provided by Amazon.",
     color: "#ff9900",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/aws/aws-original.svg",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg",
   },
   [SkillNames.VERCEL]: {
     id: 24,
@@ -190,7 +190,7 @@ export const SKILLS: Record<SkillNames, Skill> = {
     label: "Java",
     shortDescription: "High-level, class-based, object-oriented programming language.",
     color: "#e34c26",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg",
   },
   [SkillNames.SPRING]: {
     id: 26,
@@ -198,7 +198,7 @@ export const SKILLS: Record<SkillNames, Skill> = {
     label: "Spring Boot",
     shortDescription: "Comprehensive framework for enterprise Java development.",
     color: "#87bd48",
-    icon: "",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original.svg",
   },
   [SkillNames.PYTHON]: {
     id: 27,
@@ -206,7 +206,7 @@ export const SKILLS: Record<SkillNames, Skill> = {
     label: "Python",
     shortDescription: "Versatile programming language known for readability.",
     color: "#3776aa",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
   },
   [SkillNames.FIGMA]: {
     id: 30,
@@ -214,7 +214,7 @@ export const SKILLS: Record<SkillNames, Skill> = {
     label: "Figma",
     shortDescription: "Collaborative interface design tool for building meaningful products.",
     color: "#FF7262",
-    icon: "",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg",
   },
   [SkillNames.FLUTTER]: {
     id: 31,
@@ -238,7 +238,7 @@ export const SKILLS: Record<SkillNames, Skill> = {
     label: "SQL",
     shortDescription: "Standard language for storing and retrieving data in databases.",
     color: "#4479A1",
-    icon: "",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg",
   },
   [SkillNames.NEXT]: {
     id: 34,
@@ -270,7 +270,7 @@ export const SKILLS: Record<SkillNames, Skill> = {
     label: "Blockchain",
     shortDescription: "Decentralized, distributed ledger technology.",
     color: "#121D33",
-    icon: "",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bitcoin/bitcoin-original.svg",
   },
   [SkillNames.REDIS]: {
     id: 38,
@@ -286,7 +286,7 @@ export const SKILLS: Record<SkillNames, Skill> = {
     label: "CI/CD",
     shortDescription: "Continuous Integration and Delivery for automating deployment.",
     color: "#4EAA25",
-    icon: "",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jenkins/jenkins-original.svg",
   },
 };
 
