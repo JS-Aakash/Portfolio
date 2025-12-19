@@ -79,57 +79,59 @@ const HeroSection = () => {
                   </p>
                 </BlurIn>
               </div>
-              <div className="mt-8 md:ml-2 flex flex-col gap-3">
-                <Link
-                  href={
-                    "https://drive.google.com/file/d/1r6JbLXrohDQ5RaI3TBrM8o2H7O4svspX/view?usp=sharing"
-                  }
-                  target="_blank"
-                  className="flex-1"
-                >
-                  <BoxReveal delay={2} width="100%" >
-                    <Button className="flex items-center gap-2 w-full">
-                      <FileText size={24} />
-                      <p>Resume</p>
-                    </Button>
+              <div className="mt-8 flex flex-col items-center md:items-start w-full">
+                <div className="flex flex-col gap-3 w-fit">
+                  <BoxReveal delay={2} width="100%">
+                    <Link
+                      href={
+                        "https://drive.google.com/file/d/1r6JbLXrohDQ5RaI3TBrM8o2H7O4svspX/view?usp=sharing"
+                      }
+                      target="_blank"
+                      className="w-full block"
+                    >
+                      <Button className="flex items-center justify-center gap-2 w-full h-12">
+                        <FileText size={24} />
+                        <p>Resume</p>
+                      </Button>
+                    </Link>
                   </BoxReveal>
-                </Link>
-                <BlurIn delay={2.2}>
-                  <div className="md:self-start flex gap-3">
-                    <Link href={"#contact"}>
-                      <Button
-                        variant={"outline"}
-                        className="block w-full overflow-hidden"
+                  <BlurIn delay={2.2}>
+                    <div className="flex items-center gap-3">
+                      <Link href={"#contact"} className="flex-1">
+                        <Button
+                          variant={"outline"}
+                          className="w-full h-12 overflow-hidden px-8"
+                        >
+                          Hire Me
+                        </Button>
+                      </Link>
+                      <Link
+                        href={config.social.github}
+                        target="_blank"
                       >
-                        Hire Me
-                      </Button>
-                    </Link>
-                    <Link
-                      href={config.social.github}
-                      target="_blank"
-                    >
-                      <Button variant={"outline"}>
-                        <SiGithub size={24} />
-                      </Button>
-                    </Link>
-                    <Link
-                      href={config.social.linkedin}
-                      target="_blank"
-                    >
-                      <Button variant={"outline"}>
-                        <SiLinkedin size={24} />
-                      </Button>
-                    </Link>
-                    <Link
-                      href={config.social.instagram}
-                      target="_blank"
-                    >
-                      <Button variant={"outline"}>
-                        <FaInstagram size={24} />
-                      </Button>
-                    </Link>
-                  </div>
-                </BlurIn>
+                        <Button variant={"outline"} className="w-12 h-12 p-0 flex items-center justify-center">
+                          <SiGithub size={24} />
+                        </Button>
+                      </Link>
+                      <Link
+                        href={config.social.linkedin}
+                        target="_blank"
+                      >
+                        <Button variant={"outline"} className="w-12 h-12 p-0 flex items-center justify-center">
+                          <SiLinkedin size={24} />
+                        </Button>
+                      </Link>
+                      <Link
+                        href={config.social.instagram}
+                        target="_blank"
+                      >
+                        <Button variant={"outline"} className="w-12 h-12 p-0 flex items-center justify-center">
+                          <FaInstagram size={24} />
+                        </Button>
+                      </Link>
+                    </div>
+                  </BlurIn>
+                </div>
               </div>
             </div>
           )}

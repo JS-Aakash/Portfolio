@@ -1,22 +1,23 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
-import { motion, AnimatePresence, useDragControls } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Skill } from "@/data/constants";
-import { useMediaQuery } from "@/hooks/use-media-query";
 import Image from "next/image";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 interface FallingSkillInstance extends Skill {
     uniqueId: number;
 }
 
 export const FallingSkills = () => {
-    const [activeSkills, setActiveSkills] = useState<FallingSkillInstance[]>([]);
     const isMobile = useMediaQuery("(max-width: 768px)");
+    const [activeSkills, setActiveSkills] = useState<FallingSkillInstance[]>([]);
 
     useEffect(() => {
+        console.log("FallingSkills: MOUNTED - Listening for keyboard-press");
+
         const handlePress = (e: any) => {
-            console.log("FallingSkills: Received press event", e.detail);
+            console.log("FallingSkills: RECEIVED Press Event for", e.detail?.label);
             const skill = e.detail as Skill;
             if (!skill) return;
 
@@ -29,7 +30,6 @@ export const FallingSkills = () => {
         };
 
         window.addEventListener("keyboard-press", handlePress);
-        console.log("FallingSkills: Event listener registered");
         return () => window.removeEventListener("keyboard-press", handlePress);
     }, []);
 
@@ -40,8 +40,8 @@ export const FallingSkills = () => {
     if (!isMobile) return null;
 
     return (
-        <div className="fixed inset-0 pointer-events-none z-[9999] overflow-hidden">
-            <AnimatePresence>
+        <div className="fixed inset-0 pointer-events-none z-[999999] overflow-hidden">
+            <AnimatePresence mode="popLayout">
                 {activeSkills.map((skill) => (
                     <FallingSkillItem
                         key={skill.uniqueId}
@@ -54,55 +54,44 @@ export const FallingSkills = () => {
     );
 };
 
-const FallingSkillItem = ({
-    skill,
-    onRemove,
-}: {
-    skill: FallingSkillInstance;
-    onRemove: () => void;
-}) => {
-    const [isTossed, setIsTossed] = useState(false);
-
-    // Initial random position at top
-    const initialX = Math.random() * (typeof window !== "undefined" ? window.innerWidth - 100 : 200) + 50;
+const FallingSkillItem = ({ skill, onRemove }: { skill: FallingSkillInstance; onRemove: () => void }) => {
+    const [initialX] = useState(() => Math.random() * (typeof window !== "undefined" ? window.innerWidth - 100 : 200) + 50);
 
     return (
         <motion.div
-            initial={{ y: -100, x: initialX, rotate: Math.random() * 360, opacity: 0 }}
-            animate={{ y: typeof window !== "undefined" ? window.innerHeight - 150 : 500, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0, transition: { duration: 0.2 } }}
-            drag
-            dragConstraints={{ left: -1000, right: 1000, top: -1000, bottom: 1000 }}
-            onDragEnd={(_, info) => {
-                // If speed is high, consider it tossed
-                const velocity = Math.sqrt(Math.pow(info.velocity.x, 2) + Math.pow(info.velocity.y, 2));
-                if (velocity > 500) {
-                    setIsTossed(true);
-                    onRemove();
-                }
+            initial={{ y: -200, x: initialX, rotate: Math.random() * 360, opacity: 0, scale: 0.5 }}
+            animate={{
+                y: typeof window !== "undefined" ? window.innerHeight - 150 : 600,
+                opacity: 1,
+                scale: 1,
+                transition: { type: "spring", damping: 10, stiffness: 80 }
             }}
-            className="absolute pointer-events-auto touch-none"
-            style={{ cursor: "grab" }}
-            whileDrag={{ scale: 1.1, cursor: "grabbing" }}
+            exit={{ scale: 0, opacity: 0, transition: { duration: 0.3 } }}
+            drag
+            dragMomentum={false}
+            onDragEnd={(_, info) => {
+                const velocity = Math.abs(info.velocity.x) + Math.abs(info.velocity.y);
+                if (velocity > 400) onRemove();
+            }}
+            className="absolute pointer-events-auto touch-none cursor-grab active:cursor-grabbing"
+            style={{ zIndex: 999999 }}
         >
             <div
-                className="relative group p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-xl flex flex-col items-center gap-2"
-                style={{ borderColor: `${skill.color}40` }}
+                className="p-4 rounded-3xl bg-zinc-950/90 backdrop-blur-2xl border-2 flex flex-col items-center gap-2 shadow-[0_0_30px_rgba(0,0,0,0.5)]"
+                style={{ borderColor: skill.color || "#ffffff" }}
             >
-                <div className="w-12 h-12 relative">
-                    <Image
-                        src={skill.icon || "/assets/placeholder.svg"}
-                        alt={skill.label}
-                        fill
-                        className="object-contain"
-                    />
-                </div>
-                <span className="text-white text-[10px] font-bold tracking-widest uppercase opacity-80">
+                {skill.icon ? (
+                    <div className="w-12 h-12 relative">
+                        <Image src={skill.icon} alt={skill.label} fill className="object-contain" unoptimized />
+                    </div>
+                ) : (
+                    <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center text-lg font-bold text-white">
+                        {skill.label[0]}
+                    </div>
+                )}
+                <span className="text-[10px] font-bold text-white uppercase tracking-widest px-2">
                     {skill.label}
                 </span>
-
-                {/* Shine effect */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none" />
             </div>
         </motion.div>
     );
