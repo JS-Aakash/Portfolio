@@ -472,7 +472,7 @@ const projects: Project[] = [
         PROJECT_SKILLS.nlp,
       ],
     },
-    live: "https://jsaakash-neurocare.hf.space/",
+    live: "https://neurocare-715n.onrender.com/",
     github: "https://github.com/JS-Aakash/NeuroCare",
     get content() {
       return (

@@ -61,7 +61,7 @@ const STATES = {
       position: { x: 0, y: -200, z: 0 },
       rotation: {
         x: 0,
-        y: -Math.PI / 24,
+        y: Math.PI / 24,
         z: 0,
       },
     },
@@ -172,29 +172,7 @@ const AnimatedBackground = () => {
       return;
 
     // Reposition text for mobile
-    if (isMobile) {
-      const allObjects = splineApp.getAllObjects();
-      const mobileGroups = [textMobileLight, textMobileDark];
 
-      mobileGroups.forEach(group => {
-        const children = allObjects.filter(obj => (obj as any).parent?.name === group.name);
-        if (children.length >= 2) {
-          // Identify heading (larger scale) vs description
-          // If scales are equal, assume index 0 is heading based on common structure
-          const sortedChildren = [...children].sort((a, b) => b.scale.x - a.scale.x);
-          const heading = sortedChildren[0];
-          const desc = sortedChildren[1];
-
-          // Heading at Top
-          heading.position.y = 10;
-          heading.position.x = 0;
-
-          // Description at Bottom
-          desc.position.y = -210;
-          desc.position.x = 0;
-        }
-      });
-    }
 
     if (activeSection !== "skills") {
       textDesktopDark.visible = false;

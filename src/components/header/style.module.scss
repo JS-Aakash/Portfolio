@@ -4,7 +4,7 @@
   position: fixed;
   width: 100%;
   box-sizing: border-box;
-  padding: 15px;
+  padding: 8px 15px;
   backdrop-filter: blur(12px);
 
   .background {
@@ -109,7 +109,7 @@
 
 @media only screen and (min-width: 600px) {
   .header {
-    padding: 20px;
+    padding: 10px 20px;
 
     .bar {
       font-size: 15px;

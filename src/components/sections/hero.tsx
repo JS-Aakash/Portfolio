@@ -266,10 +266,10 @@ const TechProfileImage = () => {
 
         {/* Tech Words Orbiting */}
         {[
-          { text: "0x7F2A_DE31", top: "10%", left: isMobile ? "80%" : "95%" },
-          { text: "() => void", top: "90%", left: isMobile ? "70%" : "80%" },
-          { text: "<Component />", top: "85%", left: isMobile ? "10%" : "-15%" },
-          { text: "std::move()", top: "5%", left: isMobile ? "15%" : "-10%" },
+          { text: "0x7F2A_DE31", top: "10%", left: isMobile ? "105%" : "95%" },
+          { text: "() => void", top: "90%", left: isMobile ? "95%" : "80%" },
+          { text: "<Component />", top: "85%", left: isMobile ? "-15%" : "-15%" },
+          { text: "std::move()", top: "5%", left: isMobile ? "-10%" : "-10%" },
         ].map((word, idx) => (
           <motion.div
             key={idx}
