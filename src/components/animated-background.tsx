@@ -61,7 +61,7 @@ const STATES = {
       position: { x: 0, y: -200, z: 0 },
       rotation: {
         x: 0,
-        y: Math.PI / 24,
+        y: Math.PI / 36,
         z: 0,
       },
     },
@@ -172,6 +172,24 @@ const AnimatedBackground = () => {
       return;
 
     // Reposition text for mobile
+    if (isMobile) {
+      const allObjects = splineApp.getAllObjects();
+      const mobileGroups = [textMobileLight, textMobileDark];
+
+      mobileGroups.forEach(group => {
+        const children = allObjects.filter(obj => (obj as any).parent?.name === group.name);
+        if (children.length >= 2) {
+          const sortedChildren = [...children].sort((a, b) => b.scale.x - a.scale.x);
+          const heading = sortedChildren[0];
+          const desc = sortedChildren[1];
+
+          heading.position.y = 100;
+          heading.position.x = 0;
+          desc.position.y = -210;
+          desc.position.x = 0;
+        }
+      });
+    }
 
 
     if (activeSection !== "skills") {

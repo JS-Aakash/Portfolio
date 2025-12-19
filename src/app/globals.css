@@ -80,3 +80,18 @@ body {
 .mask-fade-out {
   mask-image: radial-gradient(circle, black 40%, transparent 80%);
 }
+
+.interactive-bg-container {
+  pointer-events: none;
+}
+
+.interactive-bg-container>* {
+  pointer-events: auto;
+}
+
+.interactive-bg-container a,
+.interactive-bg-container button,
+.interactive-bg-container input,
+.interactive-bg-container textarea {
+  pointer-events: auto;
+}
