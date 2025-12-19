@@ -58,10 +58,10 @@ const STATES = {
     },
     mobile: {
       scale: { x: 0.18, y: 0.18, z: 0.18 },
-      position: { x: 0, y: -200, z: 0 },
+      position: { x: 0, y: 0, z: 0 },
       rotation: {
         x: 0,
-        y: Math.PI / 36,
+        y: 0,
         z: 0,
       },
     },
@@ -154,7 +154,7 @@ const AnimatedBackground = () => {
     if (!selectedSkill || !splineApp) return;
     splineApp.setVariable("heading", selectedSkill.label);
     splineApp.setVariable("desc", selectedSkill.shortDescription);
-  }, [selectedSkill]);
+  }, [selectedSkill, isMobile]);
 
   // handle keyboard heading and desc visibility
   useEffect(() => {
@@ -171,25 +171,7 @@ const AnimatedBackground = () => {
     )
       return;
 
-    // Reposition text for mobile
-    if (isMobile) {
-      const allObjects = splineApp.getAllObjects();
-      const mobileGroups = [textMobileLight, textMobileDark];
-
-      mobileGroups.forEach(group => {
-        const children = allObjects.filter(obj => (obj as any).parent?.name === group.name);
-        if (children.length >= 2) {
-          const sortedChildren = [...children].sort((a, b) => b.scale.x - a.scale.x);
-          const heading = sortedChildren[0];
-          const desc = sortedChildren[1];
-
-          heading.position.y = 100;
-          heading.position.x = 0;
-          desc.position.y = -210;
-          desc.position.x = 0;
-        }
-      });
-    }
+    // Reposition text logic removed to keep file original as possible
 
     if (activeSection !== "skills") {
       textDesktopDark.visible = false;
@@ -378,13 +360,13 @@ const AnimatedBackground = () => {
       splineApp.setVariable("heading", skill.label);
       splineApp.setVariable("desc", skill.shortDescription);
     });
-    // Add mouseDown listener for mobile interaction
+    // Add mouseDown listener for mobile touch support
     splineApp.addEventListener("mouseDown", (e) => {
       if (!splineApp) return;
       const skill = SKILLS[e.target.name as SkillNames];
       if (skill) setSelectedSkill(skill);
-      splineApp.setVariable("heading", skill.label);
-      splineApp.setVariable("desc", skill.shortDescription);
+      splineApp.setVariable("heading", skill?.label || "");
+      splineApp.setVariable("desc", skill?.shortDescription || "");
     });
     splineApp.addEventListener("mouseHover", handleMouseHover);
   };
@@ -421,20 +403,22 @@ const AnimatedBackground = () => {
           });
         },
         onLeaveBack: () => {
-          setActiveSection("about");
-          gsap.to(kbd.scale, { ...keyboardStates("about").scale, duration: 1 });
+          setActiveSection("hero");
+          gsap.to(kbd.scale, { ...keyboardStates("hero").scale, duration: 1 });
           gsap.to(kbd.position, {
-            ...keyboardStates("about").position,
+            ...keyboardStates("hero").position,
             duration: 1,
           });
           gsap.to(kbd.rotation, {
-            ...keyboardStates("about").rotation,
+            ...keyboardStates("hero").rotation,
             duration: 1,
           });
+          // gsap.to(kbd.rotation, { x: 0, duration: 1 });
         },
       },
     });
 
+    // Added #about timeline for smooth scroll flow
     gsap.timeline({
       scrollTrigger: {
         trigger: "#about",
@@ -507,6 +491,7 @@ const AnimatedBackground = () => {
             ...keyboardStates("skills").rotation,
             duration: 1,
           });
+          // gsap.to(kbd.rotation, { x: 0, duration: 1 });
         },
       },
     });
