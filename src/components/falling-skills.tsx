@@ -15,9 +15,8 @@ export const FallingSkills = () => {
     const isMobile = useMediaQuery("(max-width: 768px)");
 
     useEffect(() => {
-        if (!isMobile) return;
-
         const handlePress = (e: any) => {
+            console.log("FallingSkills: Received press event", e.detail);
             const skill = e.detail as Skill;
             if (!skill) return;
 
@@ -30,8 +29,9 @@ export const FallingSkills = () => {
         };
 
         window.addEventListener("keyboard-press", handlePress);
+        console.log("FallingSkills: Event listener registered");
         return () => window.removeEventListener("keyboard-press", handlePress);
-    }, [isMobile]);
+    }, []);
 
     const removeSkill = (uid: number) => {
         setActiveSkills((prev) => prev.filter((s) => s.uniqueId !== uid));
