@@ -42,5 +42,6 @@ const config = {
     github: "https://github.com/JS-Aakash",
     instagram: "https://www.instagram.com/js_aakash/",
   },
+  leetcodeUsername: "JS_Aakash",
 };
 export { config };

@@ -1,5 +1,0 @@
-﻿src/components/animated-background.tsx(7,43): error TS2307: Cannot find module '@/data/constants' or its corresponding type declarations.
-src/components/animated-background.tsx(8,23): error TS2307: Cannot find module '@/lib/utils' or its corresponding type declarations.
-src/components/animated-background.tsx(9,31): error TS2307: Cannot find module '@/hooks/use-media-query' or its corresponding type declarations.
-src/components/animated-background.tsx(98,39): error TS2339: Property 'type' does not exist on type 'SplineEvent'.
-src/components/preloader/loader.tsx(2,20): error TS2307: Cannot find module './style.module.scss' or its corresponding type declarations.

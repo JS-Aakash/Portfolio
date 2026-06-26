@@ -19,13 +19,13 @@ const SkillsSection = () => {
   }, []);
 
   return (
-    <section id="skills" className="relative w-full h-[100dvh] pointer-events-none">
-      <div className="top-16 sticky h-[80vh] flex flex-col items-center justify-between py-12 pointer-events-none">
+    <section id="skills" className="relative w-full h-[200dvh] pointer-events-none">
+      <div className="top-0 sticky h-[100dvh] flex flex-col items-center justify-between py-12 pointer-events-none">
         <Link href={"#skills"} className="pointer-events-auto">
           <BoxReveal width="100%">
             <h2
               className={cn(
-                "bg-clip-text text-4xl text-center text-transparent md:text-7xl",
+                "bg-clip-text text-4xl text-center text-transparent md:text-7xl font-display",
                 "bg-gradient-to-b from-white/90 to-white/60",
                 "dark:bg-gradient-to-b dark:from-white/90 dark:to-white/60"
               )}

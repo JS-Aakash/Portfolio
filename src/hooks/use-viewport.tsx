@@ -1,17 +1,31 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export const useViewport = () => {
-  const [width, setWidth] = useState(0);
-  const [height, setHeight] = useState(0);
+  const [width, setWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 0
+  );
+  const [height, setHeight] = useState(
+    typeof window !== "undefined" ? window.innerHeight : 0
+  );
 
   useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout>;
+
     const handleResize = () => {
-      setWidth(window.innerWidth);
-      setHeight(window.innerHeight);
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setWidth(window.innerWidth);
+        setHeight(window.innerHeight);
+      }, 100);
     };
-    if (typeof window !== "undefined")
-      window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  });
+
+    window.addEventListener("resize", handleResize, { passive: true });
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
   return { width, height };
 };
+

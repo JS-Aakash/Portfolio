@@ -12,7 +12,7 @@ const CertificationsSection = () => {
             <Link href={"#certifications"} className="pointer-events-auto block w-fit mx-auto mb-10 md:mb-16">
                 <h2
                     className={cn(
-                        "bg-clip-text text-4xl text-center text-transparent md:text-7xl",
+                        "bg-clip-text text-4xl text-center text-transparent md:text-7xl font-display",
                         "bg-gradient-to-b from-white/90 to-white/60 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]",
                         "dark:bg-gradient-to-b dark:from-white/90 dark:to-white/60"
                     )}
@@ -35,7 +35,7 @@ const CertificationCard = ({ certification }: { certification: Certification }) 
         <div className="flex items-center justify-center p-2">
             <div
                 className={cn(
-                    "group relative overflow-hidden rounded-lg w-full max-w-[320px] md:max-w-[400px]", // Desktop matches projects, mobile is compact
+                    "group relative overflow-hidden rounded-lg w-full max-w-[400px]", // Desktop matches projects, mobile is compact
                     "transition-all duration-500 ease-in-out",
                     "border border-white/20 hover:border-purple-500/50",
                     "shadow-[0_0_20px_rgba(168,85,247,0.5)]",

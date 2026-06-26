@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { ReactLenis, useLenis } from "@/lib/lenis";
+import React from "react";
+import { ReactLenis } from "@/lib/lenis";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 interface LenisProps {
   children: React.ReactNode;
@@ -9,22 +10,19 @@ interface LenisProps {
 }
 
 function SmoothScroll({ children, isInsideModal = false }: LenisProps) {
-  const lenis = useLenis(({ scroll }) => {
-    // called every scroll
-  });
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
-  useEffect(() => {
-    document.addEventListener("DOMContentLoaded", () => {
-      lenis?.stop();
-      lenis?.start();
-    });
-  }, []);
+  // Disable Lenis on mobile — native scroll handles address bar,
+  // momentum, and touch gestures correctly. Lenis fights all of these.
+  if (isMobile && !isInsideModal) {
+    return <>{children}</>;
+  }
 
   return (
     <ReactLenis
-      root
+      root={!isInsideModal}
       options={{
-        duration: 2,
+        duration: 1.2,
         prevent: (node) => {
           if (isInsideModal) return true;
           const modalOpen = node.classList.contains("modall");
@@ -38,3 +36,4 @@ function SmoothScroll({ children, isInsideModal = false }: LenisProps) {
 }
 
 export default SmoothScroll;
+

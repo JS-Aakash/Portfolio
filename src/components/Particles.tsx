@@ -27,6 +27,8 @@ export default function Particles({
   const mouse = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const canvasSize = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
   const dpr = typeof window !== "undefined" ? window.devicePixelRatio : 1;
+  const animationFrameId = useRef<number>(0);
+  const isUnmounted = useRef(false);
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -34,10 +36,22 @@ export default function Particles({
     }
     initCanvas();
     animate();
-    window.addEventListener("resize", initCanvas);
+
+    let resizeTimeout: ReturnType<typeof setTimeout>;
+    const debouncedResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(initCanvas, 150);
+    };
+
+    window.addEventListener("resize", debouncedResize, { passive: true });
 
     return () => {
-      window.removeEventListener("resize", initCanvas);
+      isUnmounted.current = true;
+      window.removeEventListener("resize", debouncedResize);
+      clearTimeout(resizeTimeout);
+      if (animationFrameId.current) {
+        cancelAnimationFrame(animationFrameId.current);
+      }
     };
   }, []);
 
@@ -224,7 +238,9 @@ export default function Particles({
         );
       }
     });
-    window.requestAnimationFrame(animate);
+    if (!isUnmounted.current) {
+      animationFrameId.current = window.requestAnimationFrame(animate);
+    }
   };
 
   return (

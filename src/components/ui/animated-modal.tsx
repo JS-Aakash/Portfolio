@@ -68,15 +68,18 @@ export const ModalBody = ({
   children: ReactNode;
   className?: string;
 }) => {
-  const { open } = useModal();
+  const { open, setOpen } = useModal();
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") setOpen(false);
-      });
-    }
-  }, []);
+    if (typeof window === "undefined") return;
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [setOpen]);
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
@@ -86,7 +89,6 @@ export const ModalBody = ({
   }, [open]);
 
   const modalRef = useRef(null);
-  const { setOpen } = useModal();
   useOutsideClick(modalRef, () => setOpen(false));
 
   return (
@@ -111,7 +113,7 @@ export const ModalBody = ({
           <motion.div
             ref={modalRef}
             className={cn(
-              "max-h-[92%] w-[92%] md:max-w-[40%] bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl md:rounded-2xl relative z-50 flex flex-col overflow-hidden",
+              "max-h-[92%] w-[95%] md:w-[80%] lg:max-w-[50%] bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl md:rounded-2xl relative z-50 flex flex-col overflow-hidden",
               className
             )}
             initial={{

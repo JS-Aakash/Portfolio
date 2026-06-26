@@ -62,7 +62,7 @@ const AboutSection = () => {
                     className="text-center mb-12 md:mb-16"
                 >
                     <Link href={"#about"}>
-                        <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-slate-300 inline-block">
+                        <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-slate-300 inline-block font-display">
                             About Me
                         </h2>
                     </Link>

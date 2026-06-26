@@ -49,10 +49,10 @@ const HeroSection = () => {
                 <BlurIn delay={1}>
                   <h1
                     className={cn(
-                      "font-thin text-white dark:text-white",
+                      "font-thin text-white dark:text-white font-display",
                       "text-center md:text-left",
-                      "text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl",
-                      "cursor-default text-edge-outline font-display leading-tight"
+                      "text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl",
+                      "cursor-default text-edge-outline leading-tight"
                     )}
                   >
                     {config.author.split(" ")[0]}
@@ -136,7 +136,7 @@ const HeroSection = () => {
             </div>
           )}
         </div>
-        <div className="col-span-12 md:col-span-4 flex items-center justify-center z-[2] mt-8 md:mt-0 md:-translate-x-[175px] pointer-events-auto">
+        <div className="col-span-12 md:col-span-4 flex items-center justify-center z-[2] mt-8 md:mt-0 pointer-events-auto">
           <BlurIn delay={1.5}>
             <TechProfileImage />
           </BlurIn>
@@ -200,7 +200,7 @@ const TechProfileImage = () => {
   return (
     <div
       ref={containerRef}
-      className="relative group cursor-none no-cursor-invert touch-none"
+      className="relative group cursor-none no-cursor-invert touch-auto md:touch-none"
       onMouseMove={handleMouseMove}
       onTouchMove={handleTouchMove}
       onTouchStart={() => setIsHovered(true)}
@@ -210,7 +210,7 @@ const TechProfileImage = () => {
       onClick={handleClick}
     >
       {/* Tech Decorations - Orbiting Elements */}
-      <div className="absolute inset-0 -z-10 pointer-events-none">
+      <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden">
         {/* Scrolling Binary Background */}
         <div className="absolute inset-x-0 top-0 bottom-0 opacity-10 overflow-hidden rounded-[60%_40%_30%_70%/60%_30%_70%_40%]">
           <motion.div
@@ -269,10 +269,10 @@ const TechProfileImage = () => {
 
         {/* Tech Words Orbiting */}
         {[
-          { text: "0x7F2A_DE31", top: "10%", left: isMobile ? "85%" : "95%" },
-          { text: "() => void", top: "90%", left: isMobile ? "75%" : "80%" },
-          { text: "<Component />", top: "85%", left: isMobile ? "-15%" : "-15%" },
-          { text: "std::move()", top: "5%", left: isMobile ? "-10%" : "-10%" },
+          { text: "0x7F2A_DE31", top: "10%", left: isMobile ? "80%" : "90%" },
+          { text: "() => void", top: "90%", left: isMobile ? "70%" : "80%" },
+          { text: "<Component />", top: "85%", left: isMobile ? "2%" : "-5%" },
+          { text: "std::move()", top: "5%", left: isMobile ? "2%" : "-5%" },
         ].map((word, idx) => (
           <motion.div
             key={idx}
@@ -296,13 +296,13 @@ const TechProfileImage = () => {
         ))}
       </div>
 
-      <div className="relative w-[320px] h-[320px] sm:w-[360px] sm:h-[360px] md:w-[450px] md:h-[450px] transition-all duration-300">
+      <div className="relative w-[250px] h-[250px] sm:w-[300px] sm:h-[300px] md:w-[380px] md:h-[380px] lg:w-[420px] lg:h-[420px] transition-all duration-300">
 
         {/* Background Glow */}
         <div className="absolute inset-0 bg-gradient-to-tr from-sky-400/20 via-blue-500/20 to-purple-600/20 rounded-[60%_40%_30%_70%/60%_30%_70%_40%] blur-3xl scale-110" />
 
         {/* Base Image (me.png) - High Quality */}
-        <div className="relative w-full h-full rounded-[60%_40%_30%_70%/60%_30%_70%_40%] overflow-hidden border-2 border-white/10 shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]">
+        <div className="relative w-full h-full rounded-[60%_40%_30%_70%/60%_30%_70%_40%] overflow-hidden border-2 border-white/10 shadow-2xl transition-transform duration-500 group-hover:scale-[1.02] touch-none">
           <Image
             src="/assets/me.png"
             alt="Aakash JS"

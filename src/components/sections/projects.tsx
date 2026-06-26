@@ -19,11 +19,11 @@ import { cn } from "@/lib/utils";
 
 const ProjectsSection = () => {
   return (
-    <section id="projects" className="max-w-7xl mx-auto md:h-[130vh] px-4 sm:px-6">
+    <section id="projects" className="max-w-7xl mx-auto py-8 md:py-16 px-4 sm:px-6">
       <Link href={"#projects"}>
         <h2
           className={cn(
-            "bg-clip-text text-4xl text-center text-transparent md:text-7xl pt-6 md:pt-16",
+            "bg-clip-text text-4xl text-center text-transparent md:text-7xl pt-6 md:pt-16 font-display",
             "bg-gradient-to-b from-white/90 to-white/60 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]",
             "dark:bg-gradient-to-b dark:from-white/90 dark:to-white/60 mb-6 md:mb-8"
           )}

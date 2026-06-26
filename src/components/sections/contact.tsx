@@ -18,7 +18,7 @@ const ContactSection = () => {
       <Link href={"#contact"}>
         <h2
           className={cn(
-            "bg-clip-text text-3xl sm:text-4xl text-center text-transparent md:text-7xl pt-12 sm:pt-16",
+            "bg-clip-text text-3xl sm:text-4xl text-center text-transparent md:text-7xl pt-12 sm:pt-16 font-display",
             "bg-gradient-to-b from-white/90 to-white/60",
             "dark:bg-gradient-to-b dark:from-white/90 dark:to-white/60 leading-tight"
           )}
@@ -28,7 +28,7 @@ const ContactSection = () => {
         </h2>
       </Link>
       <div className="grid grid-cols-1 md:grid-cols-2 z-[9999] mt-8 md:mt-10">
-        <Card className="min-w-7xl bg-white/70 dark:bg-black/70 backdrop-blur-sm rounded-xl mt-10 md:mt-20">
+        <Card className="w-full bg-white/70 dark:bg-black/70 backdrop-blur-sm rounded-xl mt-10 md:mt-20">
           <CardHeader>
             <CardTitle className="text-4xl">Contact Form</CardTitle>
             <CardDescription>

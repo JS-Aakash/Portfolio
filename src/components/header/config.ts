@@ -26,7 +26,11 @@ const links: Link[] = [
     href: '/#certifications',
     thumbnail: '/assets/certifications/Coursera.jpg'
   },
-
+  {
+    title: 'Coding Journey',
+    href: '/#coding-journey',
+    thumbnail: '/assets/nav-link-previews/landing.png'
+  },
   {
     title: 'Contact',
     href: '/#contact',
