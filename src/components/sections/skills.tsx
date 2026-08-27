@@ -11,15 +11,21 @@ const SkillsSection = () => {
   useEffect(() => {
     const handleInteraction = () => setTapped(true);
     window.addEventListener("keyboard-press", handleInteraction);
-    return () => window.removeEventListener("keyboard-press", handleInteraction);
+    window.addEventListener("touchstart", handleInteraction, { passive: true });
+    window.addEventListener("pointerdown", handleInteraction, { passive: true });
+    return () => {
+      window.removeEventListener("keyboard-press", handleInteraction);
+      window.removeEventListener("touchstart", handleInteraction);
+      window.removeEventListener("pointerdown", handleInteraction);
+    };
   }, []);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start 80%", "end end"],
+    offset: ["start 45%", "end end"],
   });
 
-  // Stays fixed and pinned throughout the 250vh scroll, then fades/translates up at the end
+  // Appears smoothly right as the section centers
   const opacity = useTransform(scrollYProgress, [0, 0.05, 0.88, 1], [0, 1, 1, 0]);
   const y = useTransform(scrollYProgress, [0.88, 1], [0, -50]);
 

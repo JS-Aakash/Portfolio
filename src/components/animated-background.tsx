@@ -378,7 +378,8 @@ const AnimatedBackground = () => {
       });
     }
 
-    if (activeSectionState === "projects") {
+    const isProjectsBlock = ["projects", "certifications", "coding-journey"].includes(activeSectionState);
+    if (isProjectsBlock) {
       const timer = setTimeout(() => bongoAnimRef.current?.start(), 300);
       return () => {
         clearTimeout(timer);
