@@ -106,14 +106,14 @@ export const ModalBody = ({
             opacity: 0,
             backdropFilter: "blur(0px)",
           }}
-          className="modall fixed [perspective:800px] [transform-style:preserve-3d] inset-0 h-full w-full  flex items-center justify-center z-50"
+          className="modall fixed [perspective:800px] [transform-style:preserve-3d] inset-0 h-full w-full flex items-center justify-center z-50 p-4 sm:p-6 md:p-10"
         >
           <Overlay />
 
           <motion.div
             ref={modalRef}
             className={cn(
-              "max-h-[92%] w-[95%] md:w-[80%] lg:max-w-[50%] bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl md:rounded-2xl relative z-50 flex flex-col overflow-hidden",
+              "max-h-[88%] w-[90%] sm:w-[88%] md:w-[80%] lg:max-w-[50%] bg-[#0a0a14] border border-white/15 rounded-2xl relative z-50 flex flex-col overflow-hidden shadow-2xl",
               className
             )}
             initial={{
@@ -160,7 +160,7 @@ export const ModalContent = ({
   className?: string;
 }) => {
   return (
-    <div className={cn("flex flex-col py-1 px-4 md:p-10", className)}>
+    <div className={cn("flex flex-col p-5 sm:p-6 md:p-10", className)}>
       {children}
     </div>
   );

@@ -55,9 +55,12 @@ const HeroSection = () => {
                       "cursor-default text-edge-outline leading-tight"
                     )}
                   >
-                    {config.author.split(" ")[0]}
-                    <br />
-                    {config.author.split(" ")[1]}
+                    <span className="md:hidden whitespace-nowrap">{config.author}</span>
+                    <span className="hidden md:inline">
+                      {config.author.split(" ")[0]}
+                      <br />
+                      {config.author.split(" ")[1]}
+                    </span>
                   </h1>
                 </BlurIn>
                 <BlurIn delay={1.2}>
@@ -147,7 +150,7 @@ const HeroSection = () => {
             </div>
           )}
         </div>
-        <div className="col-span-12 md:col-span-4 flex items-center justify-center z-[2] mt-3 sm:mt-5 md:mt-0 -translate-y-2 sm:-translate-y-3 md:translate-y-0 pointer-events-auto">
+        <div className="col-span-12 md:col-span-4 flex items-center justify-center z-[2] mt-6 sm:mt-8 md:mt-0 pointer-events-auto">
           <BlurIn delay={1.5}>
             <TechProfileImage />
           </BlurIn>

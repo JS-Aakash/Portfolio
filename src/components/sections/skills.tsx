@@ -20,7 +20,7 @@ const SkillsSection = () => {
 
   return (
     <section id="skills" className="relative w-full h-[200dvh] pointer-events-none">
-      <div className="top-0 sticky h-[100dvh] flex flex-col items-center justify-between py-12 pointer-events-none">
+      <div className="top-0 sticky h-[100dvh] flex flex-col items-center justify-between pt-8 sm:pt-12 md:pt-16 pb-8 md:pb-12 pointer-events-none">
         <Link href={"#skills"} className="pointer-events-auto">
           <BoxReveal width="100%">
             <h2

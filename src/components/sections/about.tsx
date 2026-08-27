@@ -41,7 +41,7 @@ const FocusItem = ({ icon, label }: { icon: React.ReactNode, label: string }) =>
 
 const AboutSection = () => {
     return (
-        <section id="about" className="relative w-full min-h-[100dvh] py-20 px-4 sm:px-6 md:px-12 lg:px-24 overflow-hidden pointer-events-none">
+        <section id="about" className="relative w-full min-h-[100dvh] pt-4 pb-16 sm:pt-8 sm:pb-20 md:py-24 px-4 sm:px-6 md:px-12 lg:px-24 overflow-hidden pointer-events-none">
             {/* Background Decorative Elements - Desktop only */}
             <div className="hidden lg:block absolute top-0 left-0 w-full h-full pointer-events-none">
                 <motion.div
@@ -61,7 +61,7 @@ const AboutSection = () => {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-center mb-10 md:mb-16"
+                    className="text-center mb-6 sm:mb-10 md:mb-16"
                 >
                     <Link href={"#about"}>
                         <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-slate-300 inline-block font-display">

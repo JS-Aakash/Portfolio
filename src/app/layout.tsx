@@ -84,19 +84,19 @@ export default function RootLayout({
           <Lightfall
             colors={['#8A2BE2', '#5227FF', '#FF007F', '#A6C8FF', '#00F0FF']}
             backgroundColor="#030014"
-            speed={0.3}
+            speed={0.35}
             streakCount={2}
-            streakWidth={0.65}
-            streakLength={0.35}
-            glow={0.3}
-            density={0.75}
-            twinkle={0.2}
-            zoom={2.2}
-            backgroundGlow={0.25}
-            opacity={0.8}
+            streakWidth={0.8}
+            streakLength={0.4}
+            glow={0.55}
+            density={0.95}
+            twinkle={0.25}
+            zoom={2.0}
+            backgroundGlow={0.35}
+            opacity={0.95}
             mouseInteraction={true}
-            mouseStrength={0.5}
-            mouseRadius={1.1}
+            mouseStrength={0.6}
+            mouseRadius={1.2}
           />
         </div>
         <Particles

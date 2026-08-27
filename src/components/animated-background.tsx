@@ -203,13 +203,11 @@ const AnimatedBackground = () => {
     })();
   }, [splineApp, isLoading, isMobile, keyboardRevealed]);
 
-  // ===== ScrollTrigger setup — single effect with full cleanup =====
+  // ===== Native IntersectionObserver for 100% smooth, jitter-free section tracking =====
   useEffect(() => {
     if (!splineApp) return;
     const kbd = splineApp.findObjectByName("keyboard");
     if (!kbd) return;
-
-    const triggers: ScrollTrigger[] = [];
 
     const transitionTo = (section: Section) => {
       setActiveSection(section);
@@ -220,19 +218,32 @@ const AnimatedBackground = () => {
       gsap.to(kbd.rotation, { ...state.rotation, duration: 0.8, overwrite: true, ease: "power2.out" });
     };
 
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntries = entries.filter((e) => e.isIntersecting);
+        if (visibleEntries.length > 0) {
+          visibleEntries.sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+          const bestMatch = visibleEntries[0];
+          const sectionId = bestMatch.target.id as Section;
+          if (sectionId && SECTION_ORDER.includes(sectionId)) {
+            transitionTo(sectionId);
+          }
+        }
+      },
+      {
+        root: null,
+        rootMargin: "-5% 0px -5% 0px",
+        threshold: [0.1, 0.3, 0.6, 0.9],
+      }
+    );
+
     SECTION_ORDER.forEach((s) => {
-      const trigger = ScrollTrigger.create({
-        trigger: `#${s}`,
-        start: "top 50%",
-        end: "bottom 50%",
-        onEnter: () => transitionTo(s),
-        onEnterBack: () => transitionTo(s),
-      });
-      triggers.push(trigger);
+      const el = document.getElementById(s);
+      if (el) observer.observe(el);
     });
 
     return () => {
-      triggers.forEach(t => t.kill());
+      observer.disconnect();
     };
   }, [splineApp, setActiveSection, getKeyboardState]);
 
