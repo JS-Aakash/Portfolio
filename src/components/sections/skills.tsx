@@ -25,9 +25,8 @@ const SkillsSection = () => {
           <BoxReveal width="100%">
             <h2
               className={cn(
-                "bg-clip-text text-4xl text-center text-transparent md:text-7xl font-display",
-                "bg-gradient-to-b from-white/90 to-white/60",
-                "dark:bg-gradient-to-b dark:from-white/90 dark:to-white/60"
+                "bg-clip-text text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-center text-transparent font-display font-extrabold tracking-tight",
+                "bg-gradient-to-b from-white via-white/95 to-slate-200 drop-shadow-[0_0_35px_rgba(255,255,255,0.6)]"
               )}
             >
               SKILLS

@@ -8,7 +8,6 @@ import { Skill, SkillNames, SKILLS } from "@/data/constants";
 import { sleep } from "@/lib/utils";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { usePreloader } from "./preloader";
-import { useTheme } from "next-themes";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -39,12 +38,12 @@ const STATES = {
   },
   skills: {
     desktop: {
-      scale: { x: 0.4, y: 0.4, z: 0.4 },
-      position: { x: 0, y: -40, z: 0 },
+      scale: { x: 0.33, y: 0.33, z: 0.33 },
+      position: { x: 0, y: -30, z: 0 },
       rotation: { x: 0, y: Math.PI / 12, z: 0 },
     },
     mobile: {
-      scale: { x: 0.18, y: 0.18, z: 0.18 },
+      scale: { x: 0.17, y: 0.17, z: 0.17 },
       position: { x: 0, y: 0, z: 0 },
       rotation: { x: 0, y: Math.PI / 6, z: 0 },
     },
@@ -81,7 +80,6 @@ const SECTION_ORDER: Section[] = ["hero", "about", "skills", "projects", "contac
 
 const AnimatedBackground = () => {
   const { isLoading, bypassLoading } = usePreloader();
-  const { theme } = useTheme();
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [splineApp, setSplineApp] = useState<Application>();
   const [keyboardRevealed, setKeyboardRevealed] = useState(false);
@@ -126,8 +124,8 @@ const AnimatedBackground = () => {
     if (activeSectionRef.current !== "skills") return;
 
     const now = Date.now();
-    // Throttle dispatches to once per 500ms to prevent duplicates
-    if (now - lastDispatchTime.current < 500) return;
+    // Lower throttle to 150ms for ultra-responsive key taps
+    if (now - lastDispatchTime.current < 150) return;
 
     const name = e.target.name;
 
@@ -227,7 +225,7 @@ const AnimatedBackground = () => {
     };
   }, [splineApp, setActiveSection, getKeyboardState]);
 
-  // ===== Text object visibility (theme/section dependent) =====
+  // ===== Text object visibility (section dependent) =====
   useEffect(() => {
     if (!splineApp) return;
     const isSkills = activeSectionState === "skills";
@@ -237,12 +235,10 @@ const AnimatedBackground = () => {
       if (o) o.visible = false;
     });
 
-    const targetMode = theme === "dark"
-      ? (isMobile ? "text-mobile" : "text-desktop")
-      : (isMobile ? "text-mobile-dark" : "text-desktop-dark");
+    const targetMode = isMobile ? "text-mobile" : "text-desktop";
     const obj = splineApp.findObjectByName(targetMode);
     if (obj) obj.visible = isSkills;
-  }, [theme, splineApp, isMobile, activeSectionState]);
+  }, [splineApp, isMobile, activeSectionState]);
 
   // ===== Build animation controllers once when splineApp is ready =====
   useEffect(() => {

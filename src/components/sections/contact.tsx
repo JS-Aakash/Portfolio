@@ -4,7 +4,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -12,41 +11,59 @@ import ContactForm from "../ContactForm";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { config } from "@/data/config";
+import { Send } from "lucide-react";
+
 const ContactSection = () => {
   return (
-    <section id="contact" className="min-h-[100dvh] max-w-7xl mx-auto px-4 sm:px-6">
-      <Link href={"#contact"}>
-        <h2
-          className={cn(
-            "bg-clip-text text-3xl sm:text-4xl text-center text-transparent md:text-7xl pt-12 sm:pt-16 font-display",
-            "bg-gradient-to-b from-white/90 to-white/60",
-            "dark:bg-gradient-to-b dark:from-white/90 dark:to-white/60 leading-tight"
-          )}
-        >
-          LET&apos;S WORK <br />
-          TOGETHER
-        </h2>
-      </Link>
-      <div className="grid grid-cols-1 md:grid-cols-2 z-[9999] mt-8 md:mt-10">
-        <Card className="w-full bg-white/70 dark:bg-black/70 backdrop-blur-sm rounded-xl mt-10 md:mt-20">
-          <CardHeader>
-            <CardTitle className="text-4xl">Contact Form</CardTitle>
-            <CardDescription>
-              Please contact me directly at{" "}
-              <a
-                target="_blank"
-                href={`mailto:${config.email}`}
-                className="text-gray-200 cursor-can-hover rounded-lg"
-              >
-                {config.email.replace(/@/g, "(at)")}
-              </a>{" "}
-              or drop your info here.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ContactForm />
-          </CardContent>
-        </Card>
+    <section id="contact" className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 pt-12 md:pt-20 pb-8 md:pb-12 relative z-10 flex items-center justify-center">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center w-full">
+        {/* Left Column: Heading and Subtitle */}
+        <div className="lg:col-span-5 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
+          <Link href={"#contact"} className="block">
+            <h2
+              className={cn(
+                "bg-clip-text text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-display",
+                "bg-gradient-to-b from-white/95 to-white/60 drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]",
+                "leading-tight tracking-tight"
+              )}
+            >
+              LET&apos;S WORK <br />
+              TOGETHER
+            </h2>
+          </Link>
+
+          <p className="text-slate-200 text-base sm:text-lg font-medium leading-relaxed max-w-md drop-shadow-md">
+            Have an exciting project, full-time opportunity, or just want to chat? Reach out directly.
+          </p>
+
+          <div className="pt-2 text-sm text-zinc-400">
+            <span>Direct Email: </span>
+            <a
+              target="_blank"
+              href={`mailto:${config.email}`}
+              className="text-purple-400 hover:text-purple-300 underline font-medium transition-colors"
+            >
+              {config.email}
+            </a>
+          </div>
+        </div>
+
+        {/* Right Column: Contact Form */}
+        <div className="lg:col-span-7 w-full">
+          <Card className="w-full bg-black/60 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
+            <CardHeader className="p-6 sm:p-8 pb-4">
+              <CardTitle className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-2.5">
+                <Send className="w-6 h-6 text-purple-400" /> Send a Message
+              </CardTitle>
+              <CardDescription className="text-zinc-300 text-xs sm:text-sm">
+                Fill in your details below and I&apos;ll get back to you as soon as possible.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="p-6 sm:p-8 pt-0">
+              <ContactForm />
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </section>
   );

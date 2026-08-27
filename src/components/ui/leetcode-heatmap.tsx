@@ -116,16 +116,21 @@ export const LeetCodeHeatmap: React.FC<LeetCodeHeatmapProps> = ({
   const monthLabels = useMemo(() => {
     const labels: { text: string; weekIndex: number }[] = [];
     let lastMonth = -1;
+    let lastLabeledWeek = -4;
 
     calendarGrid.forEach((week, weekIdx) => {
+      // Find if this week contains the 1st of any month or begins a new month
       const firstDayOfWeek = week[0].date;
       const currentMonth = firstDayOfWeek.getMonth();
       
-      if (currentMonth !== lastMonth && weekIdx % 4 === 0) {
-        labels.push({
-          text: MONTHS[currentMonth],
-          weekIndex: weekIdx
-        });
+      if (currentMonth !== lastMonth) {
+        if (weekIdx - lastLabeledWeek >= 2) {
+          labels.push({
+            text: MONTHS[currentMonth],
+            weekIndex: weekIdx
+          });
+          lastLabeledWeek = weekIdx;
+        }
         lastMonth = currentMonth;
       }
     });

@@ -5,6 +5,8 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Binary, BrainCircuit, Code2, Cpu, GraduationCap, Repeat, Rocket, ShieldCheck, User, Zap } from "lucide-react";
 
+import LogoLoop from "../ui/logo-loop";
+
 const focusItems = [
     { icon: <Code2 className="w-4 h-4" />, label: "Full Stack" },
     { icon: <BrainCircuit className="w-4 h-4" />, label: "AI/ML" },
@@ -59,21 +61,21 @@ const AboutSection = () => {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-center mb-12 md:mb-16"
+                    className="text-center mb-10 md:mb-16"
                 >
                     <Link href={"#about"}>
-                        <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-slate-300 inline-block font-display">
+                        <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-slate-300 inline-block font-display">
                             About Me
                         </h2>
                     </Link>
-                    <div className="h-1 w-20 bg-purple-500 mx-auto mt-4 rounded-full" />
+                    <div className="h-1 w-16 sm:w-20 bg-purple-500 mx-auto mt-3 sm:mt-4 rounded-full" />
                 </motion.div>
 
                 {/* Mobile View: Simple Card */}
                 <div className="lg:hidden">
-                    <div className="bg-black/60 backdrop-blur-xl p-6 sm:p-8 rounded-3xl border border-white/10 shadow-2xl space-y-6 sm:space-y-8">
-                        <div className="space-y-4 text-slate-300 leading-relaxed">
-                            <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                    <div className="bg-black/60 backdrop-blur-xl p-4 sm:p-8 rounded-2xl sm:rounded-3xl border border-white/10 shadow-2xl space-y-6 sm:space-y-8">
+                        <div className="space-y-3 sm:space-y-4 text-slate-300 leading-relaxed text-sm sm:text-base">
+                            <h3 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
                                 <User className="w-5 h-5 text-purple-400" /> Bio
                             </h3>
                             <p>
@@ -82,29 +84,29 @@ const AboutSection = () => {
                         </div>
 
                         {/* Mobile Focus Section */}
-                        <div className="space-y-4 text-slate-300 leading-relaxed pt-4 border-t border-white/10">
-                            <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                        <div className="space-y-3 sm:space-y-4 text-slate-300 leading-relaxed pt-4 border-t border-white/10">
+                            <h3 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
                                 <Zap className="w-5 h-5 text-yellow-400" /> Focus
                             </h3>
-                            <div className="grid grid-cols-2 gap-3 pt-2">
+                            <div className="grid grid-cols-2 gap-2 sm:gap-3 pt-1 sm:pt-2">
                                 {focusItems.map((item, index) => (
-                                    <div key={index} className="flex items-center gap-2 p-2 bg-white/5 rounded-lg">
-                                        {item.icon}
-                                        <span className="text-xs">{item.label}</span>
+                                    <div key={index} className="flex items-center gap-2 p-2 sm:p-2.5 bg-white/5 rounded-lg border border-white/5">
+                                        <div className="text-purple-400 shrink-0">{item.icon}</div>
+                                        <span className="text-[11px] sm:text-xs font-semibold truncate">{item.label}</span>
                                     </div>
                                 ))}
                             </div>
                         </div>
 
-                        <div className="space-y-4 text-slate-300 leading-relaxed pt-4 border-t border-white/10">
-                            <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                        <div className="space-y-3 sm:space-y-4 text-slate-300 leading-relaxed pt-4 border-t border-white/10">
+                            <h3 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
                                 <GraduationCap className="w-5 h-5 text-blue-400" /> Education
                             </h3>
                             <div>
-                                <p className="text-white font-bold">Kongu Engineering College</p>
-                                <p className="text-sm">B.E. Computer Engineering & Design</p>
+                                <p className="text-white font-bold text-sm sm:text-base">Kongu Engineering College</p>
+                                <p className="text-xs sm:text-sm text-slate-400">B.E. Computer Engineering & Design</p>
                                 <p className="text-xs text-purple-400 font-bold mt-1">CGPA: 9.02/10.0</p>
-                                <p className="text-xs text-slate-500 italic">Aug 2024 — Present</p>
+                                <p className="text-[11px] sm:text-xs text-slate-500 italic">Aug 2024 — Present</p>
                             </div>
                         </div>
                     </div>
@@ -198,6 +200,11 @@ const AboutSection = () => {
                             </div>
                         </div>
                     </AboutCard>
+                </div>
+
+                {/* Skills Infinite Logo Loop below Approach & Philosophy */}
+                <div className="mt-8 md:mt-12">
+                    <LogoLoop />
                 </div>
             </div>
         </section>

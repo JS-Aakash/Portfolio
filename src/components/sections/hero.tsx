@@ -14,7 +14,7 @@ import { usePreloader } from "../preloader";
 import { BlurIn, BoxReveal } from "../reveal-animations";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import ScrollDownIcon from "../scroll-down-icon";
-import { SiGithub, SiLinkedin } from "react-icons/si";
+import { SiGithub, SiLinkedin, SiWhatsapp } from "react-icons/si";
 import { FaInstagram } from "react-icons/fa";
 import { config } from "@/data/config";
 
@@ -39,7 +39,7 @@ const HeroSection = () => {
                   <p
                     className={cn(
                       "text-center md:text-left mt-2 sm:mt-4 font-thin text-base sm:text-lg md:text-xl",
-                      "text-slate-500 dark:text-zinc-400",
+                      "text-zinc-400",
                       "cursor-default font-display bg-clip-text"
                     )}
                   >
@@ -49,7 +49,7 @@ const HeroSection = () => {
                 <BlurIn delay={1}>
                   <h1
                     className={cn(
-                      "font-thin text-white dark:text-white font-display",
+                      "font-thin text-white font-display",
                       "text-center md:text-left",
                       "text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl",
                       "cursor-default text-edge-outline leading-tight"
@@ -60,13 +60,12 @@ const HeroSection = () => {
                     {config.author.split(" ")[1]}
                   </h1>
                 </BlurIn>
-                {/* <div className="md:block hidden bg-gradient-to-r from-zinc-300/0 via-zinc-300/50 to-zinc-300/0 w-screen h-px animate-fade-right animate-glow" /> */}
                 <BlurIn delay={1.2}>
                   <p
                     className={cn(
                       "text-center md:text-left mt-3 sm:mt-4 font-thin",
                       "text-sm sm:text-base md:text-lg lg:text-xl",
-                      "text-slate-500 dark:text-zinc-400",
+                      "text-zinc-400",
                       "cursor-default font-display bg-clip-text leading-relaxed",
                       "max-w-lg"
                     )}
@@ -106,8 +105,18 @@ const HeroSection = () => {
                         </Button>
                       </Link>
                       <Link
+                        href={config.social.whatsapp}
+                        target="_blank"
+                        aria-label="WhatsApp"
+                      >
+                        <Button variant={"outline"} className="w-12 h-12 p-0 flex items-center justify-center border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10">
+                          <SiWhatsapp size={22} />
+                        </Button>
+                      </Link>
+                      <Link
                         href={config.social.github}
                         target="_blank"
+                        aria-label="GitHub"
                       >
                         <Button variant={"outline"} className="w-12 h-12 p-0 flex items-center justify-center">
                           <SiGithub size={24} />
@@ -116,6 +125,7 @@ const HeroSection = () => {
                       <Link
                         href={config.social.linkedin}
                         target="_blank"
+                        aria-label="LinkedIn"
                       >
                         <Button variant={"outline"} className="w-12 h-12 p-0 flex items-center justify-center">
                           <SiLinkedin size={24} />
@@ -124,6 +134,7 @@ const HeroSection = () => {
                       <Link
                         href={config.social.instagram}
                         target="_blank"
+                        aria-label="Instagram"
                       >
                         <Button variant={"outline"} className="w-12 h-12 p-0 flex items-center justify-center">
                           <FaInstagram size={24} />

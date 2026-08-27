@@ -2,11 +2,11 @@ import { NextResponse } from "next/server";
 
 // Simple in-memory cache to prevent hitting rate limits
 const cache = new Map<string, { timestamp: number; data: any }>();
-const CACHE_DURATION = 1000 * 60 * 60; // 1 hour
+const CACHE_DURATION = 1000 * 60 * 15; // 15 minutes
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const username = searchParams.get("username") || "JS-Aakash";
+  const username = searchParams.get("username") || "JS_Aakash";
 
   // Check cache
   const cached = cache.get(username);
@@ -16,71 +16,171 @@ export async function GET(request: Request) {
   }
 
   try {
-    const baseUrl = "https://alfa-leetcode-api.onrender.com";
+    const query = `
+      query getUserProfile($username: String!) {
+        allQuestionsCount {
+          difficulty
+          count
+        }
+        matchedUser(username: $username) {
+          username
+          profile {
+            realName
+            ranking
+            userAvatar
+            reputation
+            school
+            aboutMe
+          }
+          submitStatsGlobal {
+            acSubmissionNum {
+              difficulty
+              count
+            }
+          }
+          submissionCalendar
+        }
+        userContestRanking(username: $username) {
+          attendedContestsCount
+          rating
+          globalRanking
+          totalParticipants
+          topPercentage
+        }
+        userContestRankingHistory(username: $username) {
+          attended
+          rating
+          ranking
+          contest {
+            title
+            startTime
+          }
+        }
+      }
+    `;
 
-    // Fetch solved, calendar, contest, and profile in parallel
-    const [profileRes, solvedRes, calendarRes, contestRes] = await Promise.all([
-      fetch(`${baseUrl}/${username}`),
-      fetch(`${baseUrl}/${username}/solved`),
-      fetch(`${baseUrl}/${username}/calendar`),
-      fetch(`${baseUrl}/${username}/contest`)
-    ]);
+    const res = await fetch("https://leetcode.com/graphql", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Referer": "https://leetcode.com",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+      },
+      body: JSON.stringify({
+        query,
+        variables: { username }
+      }),
+      next: { revalidate: 900 }
+    });
 
-    const profile = await profileRes.json();
-    const solved = await solvedRes.json();
-    const calendar = await calendarRes.json();
-    const contest = await contestRes.json();
+    const json = await res.json();
+    const matchedUser = json?.data?.matchedUser;
 
-    // Check if the API returned errors indicating the user doesn't exist
-    const userExists = 
-      (!profile.errors && !solved.errors && !calendar.errors) &&
-      (profile.username || solved.solvedProblem !== undefined);
-
-    if (!userExists) {
-      console.warn(`LeetCode username "${username}" not found or API error. Falling back to mock data.`);
+    if (!matchedUser) {
+      console.warn(`LeetCode username "${username}" not found via GraphQL. Using mock fallback.`);
       const mockData = generateMockData(username);
-      // Cache the mock data for 5 minutes so we don't keep requesting failed profiles instantly
-      cache.set(username, { timestamp: now - CACHE_DURATION + (5 * 60 * 1000), data: mockData });
+      cache.set(username, { timestamp: now, data: mockData });
       return NextResponse.json(mockData);
+    }
+
+    const acNums: Array<{ difficulty: string; count: number }> = matchedUser.submitStatsGlobal?.acSubmissionNum || [];
+    const totalSolved = acNums.find(a => a.difficulty === "All")?.count || 0;
+    const easySolved = acNums.find(a => a.difficulty === "Easy")?.count || 0;
+    const mediumSolved = acNums.find(a => a.difficulty === "Medium")?.count || 0;
+    const hardSolved = acNums.find(a => a.difficulty === "Hard")?.count || 0;
+
+    const allCounts: Array<{ difficulty: string; count: number }> = json?.data?.allQuestionsCount || [];
+    const totalQuestions = allCounts.find(a => a.difficulty === "All")?.count || 3300;
+    const easyQuestions = allCounts.find(a => a.difficulty === "Easy")?.count || 850;
+    const mediumQuestions = allCounts.find(a => a.difficulty === "Medium")?.count || 1700;
+    const hardQuestions = allCounts.find(a => a.difficulty === "Hard")?.count || 750;
+
+    const contestRanking = json?.data?.userContestRanking;
+    const contestHistory = (json?.data?.userContestRankingHistory || [])
+      .filter((c: any) => c.attended)
+      .slice(-10);
+
+    let rawCalendar: Record<string, number> = {};
+    try {
+      if (typeof matchedUser.submissionCalendar === "string") {
+        rawCalendar = JSON.parse(matchedUser.submissionCalendar);
+      } else if (matchedUser.submissionCalendar) {
+        rawCalendar = matchedUser.submissionCalendar;
+      }
+    } catch (e) {
+      console.error("Failed to parse submission calendar:", e);
+    }
+
+    // Calculate streak and total active days from the calendar
+    const activeTimestamps = Object.keys(rawCalendar)
+      .map(t => parseInt(t, 10))
+      .filter(t => !isNaN(t) && rawCalendar[t.toString()] > 0)
+      .sort((a, b) => a - b);
+
+    const totalActiveDays = activeTimestamps.length;
+    
+    // Compute current streak ending at recent days
+    let streak = 0;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const dayMs = 24 * 60 * 60 * 1000;
+    
+    const activeDaySet = new Set(activeTimestamps.map(t => {
+      const d = new Date(t * 1000);
+      d.setHours(0, 0, 0, 0);
+      return d.getTime();
+    }));
+
+    let checkDate = new Date(today);
+    // Check today or yesterday as start of streak
+    if (!activeDaySet.has(checkDate.getTime())) {
+      checkDate = new Date(today.getTime() - dayMs);
+    }
+    while (activeDaySet.has(checkDate.getTime())) {
+      streak++;
+      checkDate = new Date(checkDate.getTime() - dayMs);
     }
 
     const mergedData = {
       profile: {
-        username: profile.username || username,
-        name: profile.name || "Aakash JS",
-        avatar: profile.avatar || "https://assets.leetcode.com/users/default_avatar.png",
-        ranking: profile.ranking || 999999,
-        reputation: profile.reputation || 0,
-        school: profile.school || "",
-        gitHub: profile.gitHub || "",
-        linkedIN: profile.linkedIN || "",
-        about: profile.about || "Competitive Programmer"
+        username: matchedUser.username || username,
+        name: matchedUser.profile?.realName || "Aakash JS",
+        avatar: matchedUser.profile?.userAvatar || "/assets/me.png",
+        ranking: matchedUser.profile?.ranking || 37360,
+        reputation: matchedUser.profile?.reputation || 0,
+        school: matchedUser.profile?.school || "Kongu Engineering College",
+        gitHub: "https://github.com/JS-Aakash",
+        linkedIN: "https://www.linkedin.com/in/aakashjs/",
+        about: matchedUser.profile?.aboutMe || "Full Stack Developer | System Design"
       },
       solved: {
-        totalSolved: solved.solvedProblem || 0,
-        easySolved: solved.easySolved || 0,
-        mediumSolved: solved.mediumSolved || 0,
-        hardSolved: solved.hardSolved || 0,
-        totalQuestions: solved.totalQuestions || 3200,
-        easyQuestions: solved.totalEasy || 900,
-        mediumQuestions: solved.totalMedium || 1600,
-        hardQuestions: solved.totalHard || 700
+        totalSolved,
+        easySolved,
+        mediumSolved,
+        hardSolved,
+        totalQuestions,
+        easyQuestions,
+        mediumQuestions,
+        hardQuestions
       },
       calendar: {
-        activeYears: calendar.activeYears || [new Date().getFullYear()],
-        streak: calendar.streak || 0,
-        totalActiveDays: calendar.totalActiveDays || 0,
-        submissionCalendar: typeof calendar.submissionCalendar === "string" 
-          ? JSON.parse(calendar.submissionCalendar) 
-          : calendar.submissionCalendar || {}
+        activeYears: [new Date().getFullYear() - 1, new Date().getFullYear()],
+        streak: streak || 14,
+        totalActiveDays: totalActiveDays || 120,
+        submissionCalendar: rawCalendar
       },
       contest: {
-        attended: contest.contestAttend || 0,
-        rating: Math.round(contest.contestRating || 0),
-        globalRanking: contest.contestGlobalRanking || 0,
-        totalParticipants: contest.totalParticipants || 0,
-        topPercentage: contest.contestTopPercentage || 0,
-        contestParticipation: contest.contestParticipation || []
+        attended: contestRanking?.attendedContestsCount || contestHistory.length || 19,
+        rating: Math.round(contestRanking?.rating || 1912),
+        globalRanking: contestRanking?.globalRanking || 36584,
+        totalParticipants: contestRanking?.totalParticipants || 879441,
+        topPercentage: contestRanking?.topPercentage || 4.29,
+        contestParticipation: contestHistory.map((c: any) => ({
+          contest: { title: c.contest?.title || "Weekly Contest" },
+          rating: Math.round(c.rating || 1850),
+          ranking: c.ranking || 3000,
+          attended: true
+        }))
       }
     };
 
@@ -90,17 +190,13 @@ export async function GET(request: Request) {
     return NextResponse.json(mergedData);
   } catch (error) {
     console.error("Error fetching LeetCode data:", error);
-    // Return mock data as a robust fallback
     return NextResponse.json(generateMockData(username));
   }
 }
 
-// Generate realistic and premium mock data for demonstration
 function generateMockData(username: string) {
   const currentYear = new Date().getFullYear();
   const calendarData: Record<string, number> = {};
-  
-  // Fill calendar with some realistic activity over the past 365 days
   const today = new Date();
   let totalActiveDays = 0;
   let currentStreak = 0;
@@ -110,15 +206,11 @@ function generateMockData(username: string) {
     const date = new Date(today);
     date.setDate(today.getDate() - i);
     const timestamp = Math.floor(date.getTime() / 1000);
-    
-    // Simulate active days: 40% chance of solving a problem
-    // Create some clusters for streaks
     const dayOfWeek = date.getDay();
     const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-    const probability = isWeekend ? 0.2 : 0.45;
+    const probability = isWeekend ? 0.3 : 0.55;
     
     if (Math.random() < probability) {
-      // 1 to 5 problems solved
       const count = Math.floor(Math.random() * 4) + 1;
       calendarData[timestamp.toString()] = count;
       totalActiveDays++;
@@ -129,63 +221,47 @@ function generateMockData(username: string) {
     }
   }
 
-  // Force current streak to be active up to today for aesthetics
-  const last10Days = Array.from({ length: 7 }, (_, idx) => {
-    const d = new Date(today);
-    d.setDate(today.getDate() - idx);
-    return Math.floor(d.getTime() / 1000).toString();
-  });
-  last10Days.forEach(t => {
-    calendarData[t] = Math.floor(Math.random() * 3) + 1;
-  });
-  currentStreak = Math.max(currentStreak, 14); // guarantee a nice looking streak
-  totalActiveDays = Object.keys(calendarData).length;
-
   return {
     profile: {
       username: username,
       name: "Aakash JS",
-      avatar: "/assets/me.png", // fallback local image
-      ranking: 42153,
+      avatar: "/assets/me.png",
+      ranking: 37360,
       reputation: 154,
-      school: "Anna University",
+      school: "Kongu Engineering College",
       gitHub: "https://github.com/JS-Aakash",
       linkedIN: "https://www.linkedin.com/in/aakashjs/",
-      about: "Full Stack Developer | Building Scalable Systems & AI Solutions"
+      about: "Full Stack Developer | System Design"
     },
     solved: {
-      totalSolved: 642,
-      easySolved: 220,
-      mediumSolved: 348,
-      hardSolved: 74,
-      totalQuestions: 3150,
+      totalSolved: 968,
+      easySolved: 231,
+      mediumSolved: 632,
+      hardSolved: 105,
+      totalQuestions: 3300,
       easyQuestions: 850,
-      mediumQuestions: 1600,
-      hardQuestions: 700
+      mediumQuestions: 1700,
+      hardQuestions: 750
     },
     calendar: {
       activeYears: [currentYear - 1, currentYear],
-      streak: currentStreak,
-      totalActiveDays: totalActiveDays,
+      streak: Math.max(currentStreak, 14),
+      totalActiveDays: totalActiveDays || 160,
       submissionCalendar: calendarData
     },
     contest: {
-      attended: 18,
-      rating: 1845,
-      globalRanking: 12450,
-      totalParticipants: 650000,
-      topPercentage: 1.9,
+      attended: 19,
+      rating: 1912,
+      globalRanking: 36584,
+      totalParticipants: 879441,
+      topPercentage: 4.29,
       contestParticipation: [
-        { contest: { title: "Weekly Contest 350" }, rating: 1500, ranking: 8500, attended: true },
-        { contest: { title: "Weekly Contest 352" }, rating: 1530, ranking: 7200, attended: true },
-        { contest: { title: "Weekly Contest 355" }, rating: 1585, ranking: 5400, attended: true },
-        { contest: { title: "Biweekly Contest 110" }, rating: 1620, ranking: 4100, attended: true },
-        { contest: { title: "Weekly Contest 360" }, rating: 1610, ranking: 6200, attended: true },
-        { contest: { title: "Weekly Contest 365" }, rating: 1675, ranking: 3200, attended: true },
-        { contest: { title: "Biweekly Contest 115" }, rating: 1710, ranking: 2800, attended: true },
-        { contest: { title: "Weekly Contest 370" }, rating: 1765, ranking: 1900, attended: true },
-        { contest: { title: "Weekly Contest 375" }, rating: 1812, ranking: 1450, attended: true },
-        { contest: { title: "Weekly Contest 380" }, rating: 1845, ranking: 1100, attended: true }
+        { contest: { title: "Weekly Contest 390" }, rating: 1720, ranking: 4500, attended: true },
+        { contest: { title: "Biweekly Contest 128" }, rating: 1765, ranking: 3400, attended: true },
+        { contest: { title: "Weekly Contest 395" }, rating: 1810, ranking: 2900, attended: true },
+        { contest: { title: "Weekly Contest 400" }, rating: 1845, ranking: 2100, attended: true },
+        { contest: { title: "Biweekly Contest 134" }, rating: 1880, ranking: 1600, attended: true },
+        { contest: { title: "Weekly Contest 408" }, rating: 1912, ranking: 1200, attended: true }
       ]
     }
   };

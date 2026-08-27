@@ -31,6 +31,7 @@ const config = {
   ],
   author: "Aakash JS",
   email: "jsaakash22@gmail.com",
+  phone: "8667832633",
   site: "https://js-aakash.github.io",
 
   get ogImg() {
@@ -41,6 +42,7 @@ const config = {
     twitter: "",
     github: "https://github.com/JS-Aakash",
     instagram: "https://www.instagram.com/js_aakash/",
+    whatsapp: "https://wa.me/918667832633?text=Hi%20Aakash,%20I%20saw%20your%20portfolio%20and%20would%20like%20to%20connect!",
   },
   leetcodeUsername: "JS_Aakash",
 };

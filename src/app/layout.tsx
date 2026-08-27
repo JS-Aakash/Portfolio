@@ -3,13 +3,13 @@ import { Inter, Archivo_Black } from "next/font/google";
 import "./globals.css";
 import ElasticCursor from "@/components/ui/ElasticCursor";
 import Particles from "@/components/Particles";
-import { ThemeProvider } from "@/components/theme-provider";
 import Header from "@/components/header/header";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Footer from "@/components/footer/footer";
 import Script from "next/script";
 import Preloader from "@/components/preloader";
+import Lightfall from "@/components/ui/Lightfall";
 
 import { config } from "@/data/config";
 import type { Viewport } from "next";
@@ -69,7 +69,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${archivoBlack.variable} ${inter.className}`}>
+    <html lang="en" className={`dark ${inter.variable} ${archivoBlack.variable} ${inter.className}`}>
       <head>
         <Script
           defer
@@ -78,26 +78,40 @@ export default function RootLayout({
         ></Script>
         {/* <Analytics /> */}
       </head>
-      <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          disableTransitionOnChange
-        >
-          <Particles
-            className="fixed inset-0 -z-10 animate-fade-in"
-            quantity={100}
+      <body className="bg-[#030014] text-white min-h-[100dvh] overflow-x-hidden relative selection:bg-purple-500/30 selection:text-white">
+        {/* Universal Lightfall WebGL Background from React Bits */}
+        <div className="fixed inset-0 -z-30 w-full h-full pointer-events-none overflow-hidden">
+          <Lightfall
+            colors={['#8A2BE2', '#5227FF', '#FF007F', '#A6C8FF', '#00F0FF']}
+            backgroundColor="#030014"
+            speed={0.3}
+            streakCount={2}
+            streakWidth={0.65}
+            streakLength={0.35}
+            glow={0.3}
+            density={0.75}
+            twinkle={0.2}
+            zoom={2.2}
+            backgroundGlow={0.25}
+            opacity={0.8}
+            mouseInteraction={true}
+            mouseStrength={0.5}
+            mouseRadius={1.1}
           />
-          <Preloader>
-            <TooltipProvider>
-              <Header />
-              {children}
-              <Footer />
-            </TooltipProvider>
-            <Toaster />
-            <ElasticCursor />
-          </Preloader>
-        </ThemeProvider>
+        </div>
+        <Particles
+          className="fixed inset-0 -z-20 animate-fade-in pointer-events-none"
+          quantity={60}
+        />
+        <Preloader>
+          <TooltipProvider>
+            <Header />
+            {children}
+            <Footer />
+          </TooltipProvider>
+          <Toaster />
+          <ElasticCursor />
+        </Preloader>
       </body>
     </html>
   );
