@@ -3,8 +3,10 @@ import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { useScroll, motion, useTransform } from "framer-motion";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 const SkillsSection = () => {
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const containerRef = useRef<HTMLElement>(null);
   const [tapped, setTapped] = useState(false);
 
@@ -13,20 +15,26 @@ const SkillsSection = () => {
     window.addEventListener("keyboard-press", handleInteraction);
     window.addEventListener("touchstart", handleInteraction, { passive: true });
     window.addEventListener("pointerdown", handleInteraction, { passive: true });
+    window.addEventListener("click", handleInteraction, { passive: true });
     return () => {
       window.removeEventListener("keyboard-press", handleInteraction);
       window.removeEventListener("touchstart", handleInteraction);
       window.removeEventListener("pointerdown", handleInteraction);
+      window.removeEventListener("click", handleInteraction);
     };
   }, []);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start 45%", "end end"],
+    offset: isMobile ? ["start 20%", "end end"] : ["start 45%", "end end"],
   });
 
-  // Appears smoothly right as the section centers
-  const opacity = useTransform(scrollYProgress, [0, 0.05, 0.88, 1], [0, 1, 1, 0]);
+  // On desktop: appears smoothly around start 45%. On mobile: appears much later around start 20%
+  const opacity = useTransform(
+    scrollYProgress,
+    isMobile ? [0, 0.1, 0.88, 1] : [0, 0.05, 0.88, 1],
+    [0, 1, 1, 0]
+  );
   const y = useTransform(scrollYProgress, [0.88, 1], [0, -50]);
 
   return (
@@ -58,18 +66,17 @@ const SkillsSection = () => {
         </Link>
       </motion.div>
 
-      {/* Guaranteed Fixed Sticky Mobile Hint */}
-      <motion.div
-        style={{ opacity }}
-        className={cn(
-          "md:hidden fixed bottom-8 inset-x-0 mx-auto w-fit z-30 transition-opacity duration-500",
-          !tapped ? "pointer-events-auto" : "opacity-0 pointer-events-none"
-        )}
-      >
-        <p className="font-mono text-xs tracking-[0.25em] text-white/90 uppercase bg-black/60 backdrop-blur-md px-5 py-2.5 rounded-full border border-purple-500/40 shadow-[0_0_20px_rgba(168,85,247,0.25)] animate-pulse">
-          Tap keys to reveal skills
-        </p>
-      </motion.div>
+      {/* Guaranteed Fixed Sticky Mobile Hint that unmounts immediately when tapped */}
+      {!tapped && (
+        <motion.div
+          style={{ opacity }}
+          className="md:hidden fixed bottom-8 inset-x-0 mx-auto w-fit z-30 pointer-events-auto"
+        >
+          <p className="font-mono text-xs tracking-[0.25em] text-white/90 uppercase bg-black/60 backdrop-blur-md px-5 py-2.5 rounded-full border border-purple-500/40 shadow-[0_0_20px_rgba(168,85,247,0.25)] animate-pulse">
+            Tap keys to reveal skills
+          </p>
+        </motion.div>
+      )}
     </section>
   );
 };

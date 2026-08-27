@@ -19,9 +19,9 @@ const STATES = {
       rotation: { x: 0, y: 0, z: 0 },
     },
     mobile: {
-      scale: { x: 0.15, y: 0.15, z: 0.15 },
+      scale: { x: 0.17, y: 0.17, z: 0.17 },
       position: { x: 0, y: 0, z: 0 },
-      rotation: { x: 0, y: 0, z: 0 },
+      rotation: { x: 0, y: Math.PI / 6, z: 0 },
     },
   },
   about: {
@@ -31,7 +31,7 @@ const STATES = {
       rotation: { x: 0, y: Math.PI / 12, z: 0 },
     },
     mobile: {
-      scale: { x: 0.18, y: 0.18, z: 0.18 },
+      scale: { x: 0.17, y: 0.17, z: 0.17 },
       position: { x: 0, y: 0, z: 0 },
       rotation: { x: 0, y: Math.PI / 6, z: 0 },
     },
@@ -55,9 +55,9 @@ const STATES = {
       rotation: { x: Math.PI, y: Math.PI / 3, z: Math.PI },
     },
     mobile: {
-      scale: { x: 0.16, y: 0.16, z: 0.16 },
+      scale: { x: 0.17, y: 0.17, z: 0.17 },
       position: { x: 0, y: 0, z: 0 },
-      rotation: { x: Math.PI, y: Math.PI / 3, z: Math.PI },
+      rotation: { x: 0, y: Math.PI / 6, z: 0 },
     },
   },
   certifications: {
@@ -67,9 +67,9 @@ const STATES = {
       rotation: { x: Math.PI, y: Math.PI / 3, z: Math.PI },
     },
     mobile: {
-      scale: { x: 0.16, y: 0.16, z: 0.16 },
+      scale: { x: 0.17, y: 0.17, z: 0.17 },
       position: { x: 0, y: 0, z: 0 },
-      rotation: { x: Math.PI, y: Math.PI / 3, z: Math.PI },
+      rotation: { x: 0, y: Math.PI / 6, z: 0 },
     },
   },
   "coding-journey": {
@@ -79,9 +79,9 @@ const STATES = {
       rotation: { x: Math.PI, y: Math.PI / 3, z: Math.PI },
     },
     mobile: {
-      scale: { x: 0.16, y: 0.16, z: 0.16 },
+      scale: { x: 0.17, y: 0.17, z: 0.17 },
       position: { x: 0, y: 0, z: 0 },
-      rotation: { x: Math.PI, y: Math.PI / 3, z: Math.PI },
+      rotation: { x: 0, y: Math.PI / 6, z: 0 },
     },
   },
   contact: {
@@ -91,9 +91,9 @@ const STATES = {
       rotation: { x: 0, y: 0, z: 0 },
     },
     mobile: {
-      scale: { x: 0.16, y: 0.16, z: 0.16 },
+      scale: { x: 0.17, y: 0.17, z: 0.17 },
       position: { x: 0, y: 0, z: 0 },
-      rotation: { x: Math.PI, y: Math.PI / 3, z: Math.PI },
+      rotation: { x: 0, y: Math.PI / 6, z: 0 },
     },
   },
 };
@@ -218,10 +218,12 @@ const AnimatedBackground = () => {
       if (activeSectionRef.current === section) return;
       setActiveSection(section);
       window.dispatchEvent(new CustomEvent("clear-falling-skills"));
-      const state = getKeyboardState(section);
-      gsap.to(kbd.scale, { ...state.scale, duration: 0.8, overwrite: true, ease: "power2.out" });
-      gsap.to(kbd.position, { ...state.position, duration: 0.8, overwrite: true, ease: "power2.out" });
-      gsap.to(kbd.rotation, { ...state.rotation, duration: 0.8, overwrite: true, ease: "power2.out" });
+      if (!isMobileRef.current) {
+        const state = getKeyboardState(section);
+        gsap.to(kbd.scale, { ...state.scale, duration: 0.8, overwrite: true, ease: "power2.out" });
+        gsap.to(kbd.position, { ...state.position, duration: 0.8, overwrite: true, ease: "power2.out" });
+        gsap.to(kbd.rotation, { ...state.rotation, duration: 0.8, overwrite: true, ease: "power2.out" });
+      }
     };
 
     const observer = new IntersectionObserver(
