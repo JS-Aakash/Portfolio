@@ -60,6 +60,30 @@ const STATES = {
       rotation: { x: Math.PI, y: Math.PI / 3, z: Math.PI },
     },
   },
+  certifications: {
+    desktop: {
+      scale: { x: 0.3, y: 0.3, z: 0.3 },
+      position: { x: 0, y: -40, z: 0 },
+      rotation: { x: Math.PI, y: Math.PI / 3, z: Math.PI },
+    },
+    mobile: {
+      scale: { x: 0.18, y: 0.18, z: 0.18 },
+      position: { x: 0, y: 150, z: 0 },
+      rotation: { x: Math.PI, y: Math.PI / 3, z: Math.PI },
+    },
+  },
+  "coding-journey": {
+    desktop: {
+      scale: { x: 0.3, y: 0.3, z: 0.3 },
+      position: { x: 0, y: -40, z: 0 },
+      rotation: { x: Math.PI, y: Math.PI / 3, z: Math.PI },
+    },
+    mobile: {
+      scale: { x: 0.18, y: 0.18, z: 0.18 },
+      position: { x: 0, y: 150, z: 0 },
+      rotation: { x: Math.PI, y: Math.PI / 3, z: Math.PI },
+    },
+  },
   contact: {
     desktop: {
       scale: { x: 0.3, y: 0.3, z: 0.3 },
@@ -74,9 +98,9 @@ const STATES = {
   },
 };
 
-type Section = "hero" | "about" | "skills" | "projects" | "contact";
+type Section = "hero" | "about" | "skills" | "projects" | "certifications" | "coding-journey" | "contact";
 
-const SECTION_ORDER: Section[] = ["hero", "about", "skills", "projects", "contact"];
+const SECTION_ORDER: Section[] = ["hero", "about", "skills", "projects", "certifications", "coding-journey", "contact"];
 
 const AnimatedBackground = () => {
   const { isLoading, bypassLoading } = usePreloader();
@@ -104,15 +128,11 @@ const AnimatedBackground = () => {
     return STATES[section][isMobileRef.current ? "mobile" : "desktop"];
   }, []);
 
-  // Stable section setter — updates both ref and state, plus URL hash
+  // Stable section setter without disruptive browser history replaceState on scroll
   const setActiveSection = useCallback((section: Section) => {
     if (activeSectionRef.current === section) return;
     activeSectionRef.current = section;
     setActiveSectionState(section);
-
-    // Update URL hash without triggering React router re-renders
-    const hash = section === "hero" ? "" : `#${section}`;
-    window.history.replaceState(null, "", `/${hash}`);
   }, []);
 
   // ===== Spline Interaction Handler (uses refs, not state) =====
@@ -195,27 +215,18 @@ const AnimatedBackground = () => {
       setActiveSection(section);
       window.dispatchEvent(new CustomEvent("clear-falling-skills"));
       const state = getKeyboardState(section);
-      gsap.to(kbd.scale, { ...state.scale, duration: 1, overwrite: true });
-      gsap.to(kbd.position, { ...state.position, duration: 1, overwrite: true });
-      gsap.to(kbd.rotation, { ...state.rotation, duration: 1, overwrite: true });
+      gsap.to(kbd.scale, { ...state.scale, duration: 0.8, overwrite: true, ease: "power2.out" });
+      gsap.to(kbd.position, { ...state.position, duration: 0.8, overwrite: true, ease: "power2.out" });
+      gsap.to(kbd.rotation, { ...state.rotation, duration: 0.8, overwrite: true, ease: "power2.out" });
     };
 
-    SECTION_ORDER.forEach((s, idx) => {
+    SECTION_ORDER.forEach((s) => {
       const trigger = ScrollTrigger.create({
         trigger: `#${s}`,
-        start: "top 60%",
-        end: "bottom 40%",
+        start: "top 50%",
+        end: "bottom 50%",
         onEnter: () => transitionTo(s),
-        onLeave: () => {
-          window.dispatchEvent(new CustomEvent("clear-falling-skills"));
-        },
         onEnterBack: () => transitionTo(s),
-        onLeaveBack: () => {
-          window.dispatchEvent(new CustomEvent("clear-falling-skills"));
-          if (idx > 0) {
-            transitionTo(SECTION_ORDER[idx - 1]);
-          }
-        }
       });
       triggers.push(trigger);
     });

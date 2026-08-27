@@ -22,11 +22,11 @@ const HeroSection = () => {
   const { isLoading } = usePreloader();
 
   return (
-    <section id="hero" className={cn("relative w-full h-[100dvh] pointer-events-none")}>
+    <section id="hero" className={cn("relative w-full min-h-[100dvh] md:h-[100dvh] pointer-events-none pb-8 md:pb-0 flex flex-col justify-center")}>
       <div className="grid md:grid-cols-12 h-full items-center px-4 sm:px-6 pointer-events-none">
         <div
           className={cn(
-            "z-[2] col-span-12 md:col-span-5 pt-[60px] md:pt-0",
+            "z-[2] col-span-12 md:col-span-5 pt-[45px] sm:pt-[55px] md:pt-0",
             "flex flex-col justify-center items-center md:items-start",
             "w-full md:pl-8 lg:pl-16 xl:pl-24",
             "pointer-events-none"
@@ -63,7 +63,7 @@ const HeroSection = () => {
                 <BlurIn delay={1.2}>
                   <p
                     className={cn(
-                      "text-center md:text-left mt-3 sm:mt-4 font-thin",
+                      "text-center md:text-left mt-2.5 sm:mt-4 font-thin",
                       "text-sm sm:text-base md:text-lg lg:text-xl",
                       "text-zinc-400",
                       "cursor-default font-display bg-clip-text leading-relaxed",
@@ -78,7 +78,7 @@ const HeroSection = () => {
                   </p>
                 </BlurIn>
               </div>
-              <div className="mt-8 flex flex-col items-center md:items-start w-full">
+              <div className="mt-6 sm:mt-8 flex flex-col items-center md:items-start w-full">
                 <div className="flex flex-col gap-3 w-fit">
                   <BoxReveal delay={2} width="100%">
                     <Link
@@ -88,18 +88,18 @@ const HeroSection = () => {
                       target="_blank"
                       className="w-full block"
                     >
-                      <Button className="flex items-center justify-center gap-2 w-full h-12">
-                        <FileText size={24} />
+                      <Button className="flex items-center justify-center gap-2 w-full h-11 sm:h-12">
+                        <FileText size={22} />
                         <p>Resume</p>
                       </Button>
                     </Link>
                   </BoxReveal>
                   <BlurIn delay={2.2}>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2.5 sm:gap-3">
                       <Link href={"#contact"} className="flex-1">
                         <Button
                           variant={"outline"}
-                          className="w-full h-12 overflow-hidden px-8"
+                          className="w-full h-11 sm:h-12 overflow-hidden px-6 sm:px-8"
                         >
                           Hire Me
                         </Button>
@@ -109,8 +109,8 @@ const HeroSection = () => {
                         target="_blank"
                         aria-label="WhatsApp"
                       >
-                        <Button variant={"outline"} className="w-12 h-12 p-0 flex items-center justify-center border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10">
-                          <SiWhatsapp size={22} />
+                        <Button variant={"outline"} className="w-11 h-11 sm:w-12 sm:h-12 p-0 flex items-center justify-center border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10">
+                          <SiWhatsapp size={20} />
                         </Button>
                       </Link>
                       <Link
@@ -118,8 +118,8 @@ const HeroSection = () => {
                         target="_blank"
                         aria-label="GitHub"
                       >
-                        <Button variant={"outline"} className="w-12 h-12 p-0 flex items-center justify-center">
-                          <SiGithub size={24} />
+                        <Button variant={"outline"} className="w-11 h-11 sm:w-12 sm:h-12 p-0 flex items-center justify-center">
+                          <SiGithub size={22} />
                         </Button>
                       </Link>
                       <Link
@@ -127,8 +127,8 @@ const HeroSection = () => {
                         target="_blank"
                         aria-label="LinkedIn"
                       >
-                        <Button variant={"outline"} className="w-12 h-12 p-0 flex items-center justify-center">
-                          <SiLinkedin size={24} />
+                        <Button variant={"outline"} className="w-11 h-11 sm:w-12 sm:h-12 p-0 flex items-center justify-center">
+                          <SiLinkedin size={22} />
                         </Button>
                       </Link>
                       <Link
@@ -136,8 +136,8 @@ const HeroSection = () => {
                         target="_blank"
                         aria-label="Instagram"
                       >
-                        <Button variant={"outline"} className="w-12 h-12 p-0 flex items-center justify-center">
-                          <FaInstagram size={24} />
+                        <Button variant={"outline"} className="w-11 h-11 sm:w-12 sm:h-12 p-0 flex items-center justify-center">
+                          <FaInstagram size={22} />
                         </Button>
                       </Link>
                     </div>
@@ -147,13 +147,13 @@ const HeroSection = () => {
             </div>
           )}
         </div>
-        <div className="col-span-12 md:col-span-4 flex items-center justify-center z-[2] mt-8 md:mt-0 pointer-events-auto">
+        <div className="col-span-12 md:col-span-4 flex items-center justify-center z-[2] mt-3 sm:mt-5 md:mt-0 -translate-y-2 sm:-translate-y-3 md:translate-y-0 pointer-events-auto">
           <BlurIn delay={1.5}>
             <TechProfileImage />
           </BlurIn>
         </div>
       </div>
-      <div className="absolute bottom-10 left-[50%] translate-x-[-50%] pointer-events-auto">
+      <div className="hidden md:block absolute bottom-8 left-[50%] translate-x-[-50%] pointer-events-auto">
         <ScrollDownIcon />
       </div>
     </section>
@@ -307,7 +307,7 @@ const TechProfileImage = () => {
         ))}
       </div>
 
-      <div className="relative w-[250px] h-[250px] sm:w-[300px] sm:h-[300px] md:w-[380px] md:h-[380px] lg:w-[420px] lg:h-[420px] transition-all duration-300">
+      <div className="relative w-[290px] h-[290px] sm:w-[340px] sm:h-[340px] md:w-[380px] md:h-[380px] lg:w-[420px] lg:h-[420px] transition-all duration-300">
 
         {/* Background Glow */}
         <div className="absolute inset-0 bg-gradient-to-tr from-sky-400/20 via-blue-500/20 to-purple-600/20 rounded-[60%_40%_30%_70%/60%_30%_70%_40%] blur-3xl scale-110" />
