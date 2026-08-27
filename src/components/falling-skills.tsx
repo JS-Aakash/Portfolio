@@ -54,7 +54,7 @@ export const FallingSkills = () => {
 
     return (
         <div className="fixed inset-0 pointer-events-none z-[999999] overflow-hidden">
-            <AnimatePresence mode="popLayout">
+            <AnimatePresence mode="sync">
                 {activeSkills.map((skill) => (
                     <FallingSkillItem
                         key={skill.uniqueId}

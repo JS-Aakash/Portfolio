@@ -1,6 +1,5 @@
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
-import { BoxReveal } from "../reveal-animations";
 import { cn } from "@/lib/utils";
 
 const SkillsSection = () => {
@@ -19,19 +18,43 @@ const SkillsSection = () => {
   }, []);
 
   return (
-    <section id="skills" className="relative w-full h-[200vh] pointer-events-none">
-      <div className="top-0 sticky h-screen w-full flex flex-col items-center justify-between pt-10 sm:pt-14 md:pt-16 pb-12 pointer-events-none">
+    <section
+      id="skills"
+      style={{
+        position: "relative",
+        width: "100%",
+        height: "250vh",
+        minHeight: "250vh",
+        pointerEvents: "none",
+        overflow: "visible",
+      }}
+    >
+      <div
+        style={{
+          position: "sticky",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: "100vh",
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "space-between",
+          pointerEvents: "none",
+          zIndex: 10,
+        }}
+        className="pt-10 sm:pt-14 md:pt-16 pb-12"
+      >
         <Link href={"#skills"} className="pointer-events-auto">
-          <BoxReveal width="100%">
-            <h2
-              className={cn(
-                "bg-clip-text text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-center text-transparent font-display font-extrabold tracking-tight",
-                "bg-gradient-to-b from-white via-white/95 to-slate-200 drop-shadow-[0_0_35px_rgba(255,255,255,0.6)]"
-              )}
-            >
-              SKILLS
-            </h2>
-          </BoxReveal>
+          <h2
+            className={cn(
+              "bg-clip-text text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-center text-transparent font-display font-extrabold tracking-tight",
+              "bg-gradient-to-b from-white via-white/95 to-slate-200 drop-shadow-[0_0_35px_rgba(255,255,255,0.6)]"
+            )}
+          >
+            SKILLS
+          </h2>
         </Link>
 
         {/* Mobile only hint - sticky at the bottom until key is tapped */}
