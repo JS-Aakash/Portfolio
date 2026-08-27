@@ -9,7 +9,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Footer from "@/components/footer/footer";
 import Script from "next/script";
 import Preloader from "@/components/preloader";
-import Lightfall from "@/components/ui/Lightfall";
+import ResponsiveLightfall from "@/components/ui/ResponsiveLightfall";
 
 import { config } from "@/data/config";
 import type { Viewport } from "next";
@@ -78,27 +78,9 @@ export default function RootLayout({
         ></Script>
         {/* <Analytics /> */}
       </head>
-      <body className="bg-[#030014] text-white min-h-[100dvh] overflow-x-hidden relative selection:bg-purple-500/30 selection:text-white">
-        {/* Universal Lightfall WebGL Background from React Bits */}
-        <div className="fixed inset-0 -z-30 w-full h-full pointer-events-none overflow-hidden">
-          <Lightfall
-            colors={['#8A2BE2', '#5227FF', '#FF007F', '#A6C8FF', '#00F0FF']}
-            backgroundColor="#030014"
-            speed={0.35}
-            streakCount={2}
-            streakWidth={0.8}
-            streakLength={0.4}
-            glow={0.55}
-            density={0.95}
-            twinkle={0.25}
-            zoom={2.0}
-            backgroundGlow={0.35}
-            opacity={0.95}
-            mouseInteraction={true}
-            mouseStrength={0.6}
-            mouseRadius={1.2}
-          />
-        </div>
+      <body className="bg-[#030014] text-white min-h-screen relative selection:bg-purple-500/30 selection:text-white">
+        {/* Universal Lightfall WebGL Background with Mobile Visibility Tuning */}
+        <ResponsiveLightfall />
         <Particles
           className="fixed inset-0 -z-20 animate-fade-in pointer-events-none"
           quantity={60}
