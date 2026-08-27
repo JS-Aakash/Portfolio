@@ -19,9 +19,9 @@ const STATES = {
       rotation: { x: 0, y: 0, z: 0 },
     },
     mobile: {
-      scale: { x: 0.17, y: 0.17, z: 0.17 },
+      scale: { x: 0.15, y: 0.15, z: 0.15 },
       position: { x: 0, y: 0, z: 0 },
-      rotation: { x: 0, y: Math.PI / 6, z: 0 },
+      rotation: { x: 0, y: 0, z: 0 },
     },
   },
   about: {
@@ -55,9 +55,9 @@ const STATES = {
       rotation: { x: Math.PI, y: Math.PI / 3, z: Math.PI },
     },
     mobile: {
-      scale: { x: 0.17, y: 0.17, z: 0.17 },
+      scale: { x: 0.16, y: 0.16, z: 0.16 },
       position: { x: 0, y: 0, z: 0 },
-      rotation: { x: 0, y: Math.PI / 6, z: 0 },
+      rotation: { x: Math.PI, y: Math.PI / 3, z: Math.PI },
     },
   },
   certifications: {
@@ -67,9 +67,9 @@ const STATES = {
       rotation: { x: Math.PI, y: Math.PI / 3, z: Math.PI },
     },
     mobile: {
-      scale: { x: 0.17, y: 0.17, z: 0.17 },
+      scale: { x: 0.16, y: 0.16, z: 0.16 },
       position: { x: 0, y: 0, z: 0 },
-      rotation: { x: 0, y: Math.PI / 6, z: 0 },
+      rotation: { x: Math.PI, y: Math.PI / 3, z: Math.PI },
     },
   },
   "coding-journey": {
@@ -79,9 +79,9 @@ const STATES = {
       rotation: { x: Math.PI, y: Math.PI / 3, z: Math.PI },
     },
     mobile: {
-      scale: { x: 0.17, y: 0.17, z: 0.17 },
+      scale: { x: 0.16, y: 0.16, z: 0.16 },
       position: { x: 0, y: 0, z: 0 },
-      rotation: { x: 0, y: Math.PI / 6, z: 0 },
+      rotation: { x: Math.PI, y: Math.PI / 3, z: Math.PI },
     },
   },
   contact: {
@@ -91,9 +91,9 @@ const STATES = {
       rotation: { x: 0, y: 0, z: 0 },
     },
     mobile: {
-      scale: { x: 0.17, y: 0.17, z: 0.17 },
+      scale: { x: 0.16, y: 0.16, z: 0.16 },
       position: { x: 0, y: 0, z: 0 },
-      rotation: { x: 0, y: Math.PI / 6, z: 0 },
+      rotation: { x: 0, y: 0, z: 0 },
     },
   },
 };
@@ -214,16 +214,20 @@ const AnimatedBackground = () => {
     const kbd = splineApp.findObjectByName("keyboard");
     if (!kbd) return;
 
+    let lastTransitionTime = 0;
+
     const transitionTo = (section: Section) => {
       if (activeSectionRef.current === section) return;
+      const now = Date.now();
+      if (now - lastTransitionTime < 300) return;
+      lastTransitionTime = now;
+
       setActiveSection(section);
       window.dispatchEvent(new CustomEvent("clear-falling-skills"));
-      if (!isMobileRef.current) {
-        const state = getKeyboardState(section);
-        gsap.to(kbd.scale, { ...state.scale, duration: 0.8, overwrite: true, ease: "power2.out" });
-        gsap.to(kbd.position, { ...state.position, duration: 0.8, overwrite: true, ease: "power2.out" });
-        gsap.to(kbd.rotation, { ...state.rotation, duration: 0.8, overwrite: true, ease: "power2.out" });
-      }
+      const state = getKeyboardState(section);
+      gsap.to(kbd.scale, { ...state.scale, duration: 0.8, overwrite: "auto", ease: "power2.out" });
+      gsap.to(kbd.position, { ...state.position, duration: 0.8, overwrite: "auto", ease: "power2.out" });
+      gsap.to(kbd.rotation, { ...state.rotation, duration: 0.8, overwrite: "auto", ease: "power2.out" });
     };
 
     const observer = new IntersectionObserver(
