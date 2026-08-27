@@ -183,6 +183,11 @@ const AnimatedBackground = () => {
       const kbd = splineApp.findObjectByName("keyboard");
       if (!kbd) return;
 
+      const initial = STATES.hero[isMobile ? "mobile" : "desktop"];
+      gsap.set(kbd.scale, initial.scale);
+      gsap.set(kbd.position, initial.position);
+      gsap.set(kbd.rotation, initial.rotation);
+
       kbd.visible = true;
       setKeyboardRevealed(true);
 
@@ -209,20 +214,14 @@ const AnimatedBackground = () => {
     const kbd = splineApp.findObjectByName("keyboard");
     if (!kbd) return;
 
-    let lastTransitionTime = 0;
-
     const transitionTo = (section: Section) => {
       if (activeSectionRef.current === section) return;
-      const now = Date.now();
-      if (now - lastTransitionTime < 400) return;
-      lastTransitionTime = now;
-
       setActiveSection(section);
       window.dispatchEvent(new CustomEvent("clear-falling-skills"));
       const state = getKeyboardState(section);
-      gsap.to(kbd.scale, { ...state.scale, duration: 0.6, overwrite: true, ease: "power2.out" });
-      gsap.to(kbd.position, { ...state.position, duration: 0.6, overwrite: true, ease: "power2.out" });
-      gsap.to(kbd.rotation, { ...state.rotation, duration: 0.6, overwrite: true, ease: "power2.out" });
+      gsap.to(kbd.scale, { ...state.scale, duration: 0.8, overwrite: true, ease: "power2.out" });
+      gsap.to(kbd.position, { ...state.position, duration: 0.8, overwrite: true, ease: "power2.out" });
+      gsap.to(kbd.rotation, { ...state.rotation, duration: 0.8, overwrite: true, ease: "power2.out" });
     };
 
     const observer = new IntersectionObserver(
