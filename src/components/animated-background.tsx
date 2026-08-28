@@ -226,7 +226,7 @@ const AnimatedBackground = () => {
     })();
   }, [splineApp, isLoading, isMobile, keyboardRevealed]);
 
-  // ===== Native IntersectionObserver for 100% smooth, jitter-free section tracking =====
+  // ===== Section tracking — scroll-based on mobile, IntersectionObserver on desktop =====
   useEffect(() => {
     if (!splineApp) return;
     const kbd = splineApp.findObjectByName("keyboard");
@@ -234,46 +234,16 @@ const AnimatedBackground = () => {
 
     let lastTransitionTime = 0;
     let committedSection: Section | null = null;
-    const DEBOUNCE_MS = isMobileRef.current ? 900 : 300;
-
-    // ── Scroll direction tracking (mobile URL bar fix) ──
-    // The mobile URL bar showing/hiding changes window.innerHeight, which causes
-    // IntersectionObserver to refire with changed ratios — producing spurious
-    // section reversals. We track real scroll direction and reject any transition
-    // that goes against it, filtering out URL-bar-induced false triggers.
-    let lastScrollY = typeof window !== "undefined" ? window.scrollY : 0;
-    let scrollDirection: "up" | "down" = "down";
-    const onScroll = () => {
-      const y = window.scrollY;
-      if (y > lastScrollY + 2) scrollDirection = "down";
-      else if (y < lastScrollY - 2) scrollDirection = "up";
-      lastScrollY = y;
-    };
-    if (isMobileRef.current) {
-      window.addEventListener("scroll", onScroll, { passive: true });
-    }
+    const DEBOUNCE_MS = 300;
 
     const transitionTo = (section: Section) => {
-      // Deduplicate: same as current active section, skip
       if (activeSectionRef.current === section) return;
-
-      // ── Direction guard (mobile only) ──
-      // Reject if the requested transition contradicts scroll direction.
-      // This filters out the URL-bar-caused false reversals.
-      if (isMobileRef.current) {
-        const currentIdx = SECTION_ORDER.indexOf(activeSectionRef.current);
-        const targetIdx = SECTION_ORDER.indexOf(section);
-        if (scrollDirection === "down" && targetIdx < currentIdx) return;
-        if (scrollDirection === "up" && targetIdx > currentIdx) return;
-      }
 
       const now = Date.now();
       const elapsed = now - lastTransitionTime;
-
       if (elapsed < DEBOUNCE_MS) {
-        // Within debounce window: only allow if re-confirming the same committed target
-        if (isMobileRef.current && committedSection === section) {
-          // pass through — confirming same target
+        if (committedSection === section) {
+          // confirming same target — pass through
         } else {
           return;
         }
@@ -290,36 +260,65 @@ const AnimatedBackground = () => {
       gsap.to(kbd.rotation, { ...state.rotation, duration: 0.8, overwrite: "auto", ease: "power2.out" });
     };
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visibleEntries = entries.filter((e) => e.isIntersecting);
-        if (visibleEntries.length > 0) {
-          visibleEntries.sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-          const bestMatch = visibleEntries[0];
-          const sectionId = bestMatch.target.id as Section;
-          if (sectionId && SECTION_ORDER.includes(sectionId)) {
-            transitionTo(sectionId);
-          }
+    if (isMobileRef.current) {
+      // ── Mobile: scroll-position-based detection ──
+      // window.scrollY and element.offsetTop are pure document-layout values.
+      // They are NEVER affected by the URL bar showing/hiding (only viewport
+      // dimensions change, not the scroll position or element positions).
+      // This makes section detection completely immune to URL bar events.
+      const getSectionAtScroll = (): Section => {
+        // The "active" section is the one whose top is closest to 40% from the top of the viewport
+        const scrollMid = window.scrollY + window.innerHeight * 0.4;
+        let active: Section = "hero";
+        for (const sectionId of SECTION_ORDER) {
+          const el = document.getElementById(sectionId);
+          if (!el) continue;
+          if (el.offsetTop <= scrollMid) active = sectionId as Section;
         }
-      },
-      {
-        root: null,
-        rootMargin: "-15% 0px -15% 0px",
-        threshold: [0.15, 0.4, 0.7],
-      }
-    );
+        return active;
+      };
 
-    SECTION_ORDER.forEach((s) => {
-      const el = document.getElementById(s);
-      if (el) observer.observe(el);
-    });
+      const onScroll = () => {
+        transitionTo(getSectionAtScroll());
+      };
 
-    return () => {
-      observer.disconnect();
-      if (isMobileRef.current) {
+      window.addEventListener("scroll", onScroll, { passive: true });
+      // Fire once immediately to set the initial section
+      onScroll();
+
+      return () => {
         window.removeEventListener("scroll", onScroll);
-      }
-    };
+      };
+    } else {
+      // ── Desktop: IntersectionObserver (no URL bar, works great) ──
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const visibleEntries = entries.filter((e) => e.isIntersecting);
+          if (visibleEntries.length > 0) {
+            visibleEntries.sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+            const bestMatch = visibleEntries[0];
+            const sectionId = bestMatch.target.id as Section;
+            if (sectionId && SECTION_ORDER.includes(sectionId)) {
+              transitionTo(sectionId);
+            }
+          }
+        },
+        {
+          root: null,
+          rootMargin: "-15% 0px -15% 0px",
+          threshold: [0.15, 0.4, 0.7],
+        }
+      );
+
+      SECTION_ORDER.forEach((s) => {
+        const el = document.getElementById(s);
+        if (el) observer.observe(el);
+      });
+
+      return () => {
+        observer.disconnect();
+      };
+    }
   }, [splineApp, setActiveSection, getKeyboardState]);
 
   // ===== Text object visibility (section dependent) =====
