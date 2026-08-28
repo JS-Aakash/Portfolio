@@ -221,39 +221,19 @@ const AnimatedBackground = () => {
     })();
   }, [splineApp, isLoading, isMobile, keyboardRevealed]);
 
-  // ===== Native IntersectionObserver for 100% smooth, jitter-free section tracking =====
+  // ===== DESKTOP: IntersectionObserver section tracking =====
   useEffect(() => {
-    if (!splineApp) return;
+    if (!splineApp || isMobileRef.current) return; // Desktop only
     const kbd = splineApp.findObjectByName("keyboard");
     if (!kbd) return;
 
     let lastTransitionTime = 0;
-    let committedSection: Section | null = null;
-    // On mobile use a longer debounce + committed section lock to absorb momentum oscillation.
-    const DEBOUNCE_MS = isMobileRef.current ? 900 : 300;
 
     const transitionTo = (section: Section) => {
-      // Deduplicate: same as current active section, skip
       if (activeSectionRef.current === section) return;
-
       const now = Date.now();
-      const elapsed = now - lastTransitionTime;
-
-      // On mobile: if we already committed to a section within the debounce window,
-      // reject any reversal to the previous section (handles momentum oscillation).
-      // On desktop: just use the standard time debounce.
-      if (elapsed < DEBOUNCE_MS) {
-        if (isMobileRef.current && committedSection === section) {
-          // Allow re-committing to same target (e.g., confirmed after debounce)
-        } else {
-          return;
-        }
-      }
-
+      if (now - lastTransitionTime < 300) return;
       lastTransitionTime = now;
-      committedSection = section;
-
-      // Commit the section and dispatch events ONCE per real section change
       setActiveSection(section);
       window.dispatchEvent(new CustomEvent("clear-falling-skills"));
       const state = getKeyboardState(section);
@@ -274,11 +254,7 @@ const AnimatedBackground = () => {
           }
         }
       },
-      {
-        root: null,
-        rootMargin: "-15% 0px -15% 0px",
-        threshold: [0.15, 0.4, 0.7],
-      }
+      { root: null, rootMargin: "-15% 0px -15% 0px", threshold: [0.15, 0.4, 0.7] }
     );
 
     SECTION_ORDER.forEach((s) => {
@@ -286,8 +262,104 @@ const AnimatedBackground = () => {
       if (el) observer.observe(el);
     });
 
+    return () => { observer.disconnect(); };
+  }, [splineApp, setActiveSection, getKeyboardState]);
+
+  // ===== MOBILE: Scroll-settle section tracking =====
+  // We never fire during active scroll — only AFTER scroll completely stops.
+  // Also blocked during URL bar show/hide (visualViewport resize) which changes
+  // window.innerHeight and causes false section-change triggers.
+  useEffect(() => {
+    if (!splineApp || !isMobileRef.current) return; // Mobile only
+    const kbd = splineApp.findObjectByName("keyboard");
+    if (!kbd) return;
+
+    const commitSection = (section: Section) => {
+      if (activeSectionRef.current === section) return;
+      setActiveSection(section);
+      window.dispatchEvent(new CustomEvent("clear-falling-skills"));
+      const state = getKeyboardState(section);
+      gsap.to(kbd.scale, { ...state.scale, duration: 0.6, overwrite: "auto", ease: "power2.out" });
+      gsap.to(kbd.position, { ...state.position, duration: 0.6, overwrite: "auto", ease: "power2.out" });
+      gsap.to(kbd.rotation, { ...state.rotation, duration: 0.6, overwrite: "auto", ease: "power2.out" });
+    };
+
+    // Find which section is most dominant in the viewport right now
+    const getDominantSection = (): Section | null => {
+      const vhCenter = window.innerHeight / 2;
+      let best: Section | null = null;
+      let bestScore = 0;
+
+      for (const id of SECTION_ORDER) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const rect = el.getBoundingClientRect();
+        // Score = how much of the section overlaps the middle 60% of the viewport
+        const zoneTop = vhCenter * 0.4;
+        const zoneBottom = vhCenter * 1.6;
+        const overlap = Math.max(0, Math.min(rect.bottom, zoneBottom) - Math.max(rect.top, zoneTop));
+        if (overlap > bestScore) {
+          bestScore = overlap;
+          best = id;
+        }
+      }
+      return best;
+    };
+
+    let scrollTimer: ReturnType<typeof setTimeout> | null = null;
+    let resizeTimer: ReturnType<typeof setTimeout> | null = null;
+    // Flag: true while the URL bar is animating in/out
+    let isUrlBarAnimating = false;
+
+    const handleScroll = () => {
+      // Completely ignore scroll events that fire during URL bar animation.
+      // The URL bar showing causes the page to "scroll" without user intent.
+      if (isUrlBarAnimating) return;
+
+      if (scrollTimer) clearTimeout(scrollTimer);
+      // 200ms after the LAST scroll event fires, commit the section
+      scrollTimer = setTimeout(() => {
+        if (isUrlBarAnimating) return; // double-check after delay
+        const section = getDominantSection();
+        if (section) commitSection(section);
+      }, 200);
+    };
+
+    // visualViewport 'resize' fires when the URL bar shows or hides — NOT during normal scroll.
+    // We block section transitions for the duration of the URL bar animation.
+    const handleViewportResize = () => {
+      isUrlBarAnimating = true;
+      // Cancel any pending scroll-triggered commit
+      if (scrollTimer) { clearTimeout(scrollTimer); scrollTimer = null; }
+      if (resizeTimer) clearTimeout(resizeTimer);
+      // After URL bar animation finishes (~350ms), do ONE clean section check
+      resizeTimer = setTimeout(() => {
+        isUrlBarAnimating = false;
+        // Don't commit here — let next user scroll naturally determine section
+        // This avoids a wrong commit while page layout is still settling
+      }, 400);
+    };
+
+    // Also do an initial check after mount (handles page reload mid-scroll)
+    const initTimer = setTimeout(() => {
+      const section = getDominantSection();
+      if (section) commitSection(section);
+    }, 500);
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    // Use visualViewport for URL bar detection (more reliable than window resize)
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", handleViewportResize);
+    }
+
     return () => {
-      observer.disconnect();
+      window.removeEventListener("scroll", handleScroll);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener("resize", handleViewportResize);
+      }
+      if (scrollTimer) clearTimeout(scrollTimer);
+      if (resizeTimer) clearTimeout(resizeTimer);
+      clearTimeout(initTimer);
     };
   }, [splineApp, setActiveSection, getKeyboardState]);
 

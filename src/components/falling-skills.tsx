@@ -21,16 +21,19 @@ export const FallingSkills = () => {
             const skill = e.detail as Skill;
             if (!skill) return;
 
-            const newSkill: FallingSkillInstance = {
-                ...skill,
-                uniqueId: Date.now() + Math.random(),
-            };
+            const uid = Date.now() + Math.random();
+            const newSkill: FallingSkillInstance = { ...skill, uniqueId: uid };
 
             setActiveSkills((prev) => {
                 const next = [...prev, newSkill];
                 if (next.length > 3) return next.slice(-3);
                 return next;
             });
+
+            // Auto-remove after 3.5s so they don't linger into the next section
+            setTimeout(() => {
+                setActiveSkills((prev) => prev.filter((s) => s.uniqueId !== uid));
+            }, 3500);
         };
 
         const handleClear = () => {
