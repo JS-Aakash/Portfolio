@@ -47,6 +47,11 @@ import {
   SiNextdotjs,
   SiFastapi,
   SiStreamlit,
+  SiAmazonaws,
+  SiAwslambda,
+  SiAmazons3,
+  SiAmazonec2,
+  SiEspressif,
 } from "react-icons/si";
 import { TbBrandFramerMotion } from "react-icons/tb";
 import css from "styled-jsx/css";
@@ -395,6 +400,54 @@ const PROJECT_SKILLS = {
     fg: "white",
     icon: <Bot />,
   },
+  awsLambda: {
+    title: "AWS Lambda",
+    bg: "black",
+    fg: "white",
+    icon: <SiAwslambda />,
+  },
+  s3: {
+    title: "Amazon S3",
+    bg: "black",
+    fg: "white",
+    icon: <SiAmazons3 />,
+  },
+  ec2: {
+    title: "Amazon EC2",
+    bg: "black",
+    fg: "white",
+    icon: <SiAmazonec2 />,
+  },
+  langchain: {
+    title: "LangChain",
+    bg: "black",
+    fg: "white",
+    icon: <Bot />,
+  },
+  groq: {
+    title: "Groq (Llama 3)",
+    bg: "black",
+    fg: "white",
+    icon: <Bot />,
+  },
+  esp32: {
+    title: "ESP32",
+    bg: "black",
+    fg: "white",
+    icon: <SiEspressif />,
+  },
+  xgboost: {
+    title: "XGBoost",
+    bg: "black",
+    fg: "white",
+    icon: <SiScikitlearn />,
+  },
+  octokit: {
+    title: "GitHub API",
+    bg: "black",
+    fg: "white",
+    icon: <FaGithub />,
+  },
 };
 export type Project = {
   id: string;
@@ -408,6 +461,143 @@ export type Project = {
   live: string;
 };
 const projects: Project[] = [
+  {
+    id: "contextai",
+    category: "AI / Cloud Architecture",
+    title: "ContextAI",
+    src: "/assets/projects-screenshots/contextai.jpg",
+    screenshots: ["/assets/projects-screenshots/contextai.jpg"],
+    skills: {
+      frontend: [
+        PROJECT_SKILLS.next,
+        PROJECT_SKILLS.tailwind,
+        PROJECT_SKILLS.ts,
+      ],
+      backend: [
+        PROJECT_SKILLS.awsLambda,
+        PROJECT_SKILLS.s3,
+        PROJECT_SKILLS.ec2,
+        PROJECT_SKILLS.docker,
+        PROJECT_SKILLS.langchain,
+        PROJECT_SKILLS.groq,
+      ],
+    },
+    live: "",
+    github: "https://github.com/JS-Aakash/ContextAI",
+    get content() {
+      return (
+        <div>
+          <TypographyP className="font-mono mb-4 text-sm">
+            ContextAI is a hybrid serverless RAG platform that transforms static documents into an interactive AI research assistant, enabling users to converse with multiple PDFs and generate contextual, structured insights.
+          </TypographyP>
+
+          <TypographyH3 className="my-4 mt-8">Key Features</TypographyH3>
+          <ul className="list-disc list-inside space-y-2 font-mono text-sm">
+            <li><span className="text-white font-bold">Multi-Document Intelligence:</span> Upload and selectively combine multiple PDFs as AI context for targeted research.</li>
+            <li><span className="text-white font-bold">Semantic RAG Search:</span> Parses and chunks documents using LangChain to retrieve contextually relevant information.</li>
+            <li><span className="text-white font-bold">Deep AI Reasoning:</span> Uses Llama 3 70B through Groq for structured summaries, comparisons, and research responses.</li>
+            <li><span className="text-white font-bold">Hybrid Cloud Architecture:</span> Combines AWS Lambda orchestration with Dockerized EC2 compute for intensive AI workloads.</li>
+          </ul>
+
+          <TypographyH3 className="my-4 mt-8">Technical Impact</TypographyH3>
+          <p className="font-mono mb-2 text-sm text-neutral-400">
+            Delivered a production-oriented document intelligence system by combining serverless scalability with dedicated AI compute, while enabling automated document ingestion, secure file handling, and streamlined CI/CD deployment.
+          </p>
+        </div>
+      );
+    },
+  },
+  {
+    id: "deployops",
+    category: "DevOps / AI DevEx",
+    title: "DeployOps",
+    src: "/assets/projects-screenshots/deployops.jpg",
+    screenshots: ["/assets/projects-screenshots/deployops.jpg"],
+    skills: {
+      frontend: [
+        PROJECT_SKILLS.next,
+        PROJECT_SKILLS.tailwind,
+        PROJECT_SKILLS.ts,
+      ],
+      backend: [
+        PROJECT_SKILLS.mongo,
+        PROJECT_SKILLS.openai,
+        PROJECT_SKILLS.octokit,
+        PROJECT_SKILLS.vercel,
+      ],
+    },
+    live: "",
+    github: "https://github.com/JS-Aakash/deployops",
+    get content() {
+      return (
+        <div>
+          <TypographyP className="font-mono mb-4 text-sm">
+            DeployOps is an AI-native DevEx platform that unifies project planning, software development, issue management, and deployment orchestration into a single workflow.
+          </TypographyP>
+
+          <TypographyH3 className="my-4 mt-8">Key Features</TypographyH3>
+          <ul className="list-disc list-inside space-y-2 font-mono text-sm">
+            <li><span className="text-white font-bold">AI Development Agents:</span> Architect, Solver, Consultant, and Guardian agents automate requirements, code fixes, documentation queries, and release risk analysis.</li>
+            <li><span className="text-white font-bold">Unified SDLC:</span> Connects brainstorming, requirements, issues, Kanban workflows, documentation, and project collaboration.</li>
+            <li><span className="text-white font-bold">AI Auto-Fix:</span> Analyzes issues and codebases, modifies files, and automatically creates GitHub Pull Requests.</li>
+            <li><span className="text-white font-bold">Deployment Orchestration:</span> Integrates with Vercel, Netlify, and Render to trigger deployments and monitor operational health.</li>
+          </ul>
+
+          <TypographyH3 className="my-4 mt-8">Technical Impact</TypographyH3>
+          <p className="font-mono mb-2 text-sm text-neutral-400">
+            Eliminated fragmentation across the software lifecycle by connecting <span className="text-white font-bold">requirements → issues → AI-assisted development → pull requests → deployments</span>, providing traceability and automated release-readiness checks from a unified platform.
+          </p>
+        </div>
+      );
+    },
+  },
+  {
+    id: "sentinelx",
+    category: "IoT / Predictive AI / Web3",
+    title: "SentinelX",
+    src: "/assets/projects-screenshots/sentinelx.jpg",
+    screenshots: ["/assets/projects-screenshots/sentinelx.jpg"],
+    skills: {
+      frontend: [
+        PROJECT_SKILLS.next,
+        PROJECT_SKILLS.tailwind,
+        PROJECT_SKILLS.ts,
+      ],
+      backend: [
+        PROJECT_SKILLS.esp32,
+        PROJECT_SKILLS.node,
+        PROJECT_SKILLS.xgboost,
+        PROJECT_SKILLS.mongo,
+        PROJECT_SKILLS.ethereum,
+        PROJECT_SKILLS.sockerio,
+      ],
+    },
+    live: "",
+    github: "https://github.com/JS-Aakash/SentinelX",
+    get content() {
+      return (
+        <div>
+          <TypographyP className="font-mono mb-4 text-sm">
+            SentinelX is an AI-powered industrial asset intelligence platform that combines real-time IoT telemetry, predictive maintenance, anomaly detection, and blockchain-backed maintenance records to monitor machine health and prevent unexpected failures.
+          </TypographyP>
+
+          <TypographyH3 className="my-4 mt-8">Key Features</TypographyH3>
+          <ul className="list-disc list-inside space-y-2 font-mono text-sm">
+            <li><span className="text-white font-bold">Real-Time IoT Monitoring:</span> Collects temperature, vibration, current, voltage, and RPM data from ESP32-connected industrial sensors.</li>
+            <li><span className="text-white font-bold">Predictive Maintenance:</span> Uses XGBoost for Remaining Useful Life (RUL) forecasting and Isolation Forest for anomaly detection.</li>
+            <li><span className="text-white font-bold">Blockchain Verification:</span> Anchors maintenance records and warranties on the Ethereum Sepolia testnet for tamper-resistant verification.</li>
+            <li><span className="text-white font-bold">Live Fleet Dashboard:</span> Streams telemetry through Socket.IO with machine health visualization and waveform analytics.</li>
+            <li><span className="text-white font-bold">Multi-Tenant Governance:</span> Provides role-based access for administrators, maintenance engineers, and machine operators.</li>
+          </ul>
+
+          <TypographyH3 className="my-4 mt-8">Technical Impact</TypographyH3>
+          <p className="font-mono mb-2 text-sm text-neutral-400">
+            Enabled proactive industrial maintenance by combining <span className="text-white font-bold">real-time sensor intelligence with AI-based failure prediction and immutable maintenance records</span>, helping organizations identify machine degradation before critical failures occur.
+          </p>
+        </div>
+      );
+    },
+  },
   {
     id: "farm2pharma",
     category: "Blockchain",

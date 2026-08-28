@@ -12,15 +12,11 @@ const SkillsSection = () => {
 
   useEffect(() => {
     const handleInteraction = () => setTapped(true);
+    // Only mark as tapped on actual keyboard-press (key tap), not generic touch/click
+    // which would fire when user merely scrolls into the section.
     window.addEventListener("keyboard-press", handleInteraction);
-    window.addEventListener("touchstart", handleInteraction, { passive: true });
-    window.addEventListener("pointerdown", handleInteraction, { passive: true });
-    window.addEventListener("click", handleInteraction, { passive: true });
     return () => {
       window.removeEventListener("keyboard-press", handleInteraction);
-      window.removeEventListener("touchstart", handleInteraction);
-      window.removeEventListener("pointerdown", handleInteraction);
-      window.removeEventListener("click", handleInteraction);
     };
   }, []);
 

@@ -37,6 +37,7 @@ const config = {
   get ogImg() {
     return this.site + "/assets/seo/og-image.png";
   },
+  resume: "https://drive.google.com/file/d/1hFjr5zUdN9GPsgRVrLEUigB0AVsBzFTP/view?usp=sharing",
   social: {
     linkedin: "https://www.linkedin.com/in/aakashjs/",
     twitter: "",

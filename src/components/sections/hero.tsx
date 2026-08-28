@@ -35,7 +35,7 @@ const HeroSection = () => {
           {!isLoading && (
             <div className="pointer-events-auto">
               <div className="w-full max-w-md md:max-w-none">
-                <BlurIn delay={0.7}>
+                <BlurIn delay={0.3}>
                   <p
                     className={cn(
                       "text-center md:text-left mt-2 sm:mt-4 font-thin text-base sm:text-lg md:text-xl",
@@ -46,7 +46,7 @@ const HeroSection = () => {
                     Hi, I am
                   </p>
                 </BlurIn>
-                <BlurIn delay={1}>
+                <BlurIn delay={0.5}>
                   <h1
                     className={cn(
                       "font-thin text-white font-display",
@@ -63,7 +63,7 @@ const HeroSection = () => {
                     </span>
                   </h1>
                 </BlurIn>
-                <BlurIn delay={1.2}>
+                <BlurIn delay={0.7}>
                   <p
                     className={cn(
                       "text-center md:text-left mt-2.5 sm:mt-4 font-thin",
@@ -83,11 +83,9 @@ const HeroSection = () => {
               </div>
               <div className="mt-6 sm:mt-8 flex flex-col items-center md:items-start w-full">
                 <div className="flex flex-col gap-3 w-fit">
-                  <BoxReveal delay={2} width="100%">
+                  <BoxReveal delay={0.9} width="100%">
                     <Link
-                      href={
-                        "https://drive.google.com/file/d/1r6JbLXrohDQ5RaI3TBrM8o2H7O4svspX/view?usp=sharing"
-                      }
+                      href={config.resume}
                       target="_blank"
                       className="w-full block"
                     >
@@ -97,7 +95,7 @@ const HeroSection = () => {
                       </Button>
                     </Link>
                   </BoxReveal>
-                  <BlurIn delay={2.2}>
+                  <BlurIn delay={1.1}>
                     <div className="flex items-center gap-2.5 sm:gap-3">
                       <Link href={"#contact"} className="flex-1">
                         <Button
@@ -151,7 +149,7 @@ const HeroSection = () => {
           )}
         </div>
         <div className="col-span-12 md:col-span-4 flex items-center justify-center z-[2] mt-6 sm:mt-8 md:mt-0 pointer-events-auto">
-          <BlurIn delay={1.5}>
+          <BlurIn delay={0.8}>
             <TechProfileImage />
           </BlurIn>
         </div>

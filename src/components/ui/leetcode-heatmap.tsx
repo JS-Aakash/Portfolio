@@ -96,11 +96,11 @@ export const LeetCodeHeatmap: React.FC<LeetCodeHeatmapProps> = ({
   };
 
   const levelClasses = [
-    "bg-white/5 border-white/5 hover:bg-white/10",
-    "bg-purple-950/40 border-purple-500/20 text-purple-400 hover:bg-purple-900/40 hover:border-purple-500/40",
-    "bg-purple-800/40 border-purple-500/40 text-purple-300 hover:bg-purple-700/50 hover:border-purple-500/60",
-    "bg-purple-600/60 border-purple-400/50 text-purple-200 hover:bg-purple-500/70 hover:border-purple-400/70",
-    "bg-purple-500 border-purple-300 text-purple-100 hover:bg-purple-400 hover:border-purple-200"
+    "bg-white/[0.07] border-white/[0.08] hover:bg-white/15",
+    "bg-purple-900/80 border-purple-500/50 text-purple-300 shadow-[0_0_8px_rgba(168,85,247,0.25)] hover:bg-purple-800 hover:border-purple-400",
+    "bg-purple-700/90 border-purple-400/60 text-purple-200 shadow-[0_0_10px_rgba(168,85,247,0.35)] hover:bg-purple-600 hover:border-purple-300",
+    "bg-purple-500 border-purple-300/80 text-white shadow-[0_0_12px_rgba(168,85,247,0.5)] hover:bg-purple-400",
+    "bg-fuchsia-400 border-white text-white shadow-[0_0_15px_rgba(232,121,249,0.7)] hover:bg-fuchsia-300"
   ];
 
   // Helper to format date for tooltips: e.g. "Oct 24, 2025"
@@ -150,14 +150,14 @@ export const LeetCodeHeatmap: React.FC<LeetCodeHeatmapProps> = ({
             <span className="font-bold text-white">{streak} Days</span> Current Streak
           </div>
         </div>
-        <div className="flex items-center gap-1">
-          <span>Less</span>
-          <div className="w-2.5 h-2.5 rounded-sm bg-white/5 border border-white/5" />
-          <div className="w-2.5 h-2.5 rounded-sm bg-purple-950/40 border border-purple-500/20" />
-          <div className="w-2.5 h-2.5 rounded-sm bg-purple-800/40 border border-purple-500/40" />
-          <div className="w-2.5 h-2.5 rounded-sm bg-purple-600/60 border border-purple-400/50" />
-          <div className="w-2.5 h-2.5 rounded-sm bg-purple-500 border border-purple-300" />
-          <span>More</span>
+        <div className="flex items-center gap-1.5">
+          <span className="text-[11px] text-zinc-400 mr-1">Less</span>
+          <div className="w-2.5 h-2.5 rounded-sm bg-white/[0.07] border border-white/[0.08]" />
+          <div className="w-2.5 h-2.5 rounded-sm bg-purple-900/80 border border-purple-500/50 shadow-[0_0_6px_rgba(168,85,247,0.25)]" />
+          <div className="w-2.5 h-2.5 rounded-sm bg-purple-700/90 border border-purple-400/60 shadow-[0_0_8px_rgba(168,85,247,0.35)]" />
+          <div className="w-2.5 h-2.5 rounded-sm bg-purple-500 border border-purple-300/80 shadow-[0_0_10px_rgba(168,85,247,0.5)]" />
+          <div className="w-2.5 h-2.5 rounded-sm bg-fuchsia-400 border border-white shadow-[0_0_12px_rgba(232,121,249,0.7)]" />
+          <span className="text-[11px] text-zinc-400 ml-1">More</span>
         </div>
       </div>
 

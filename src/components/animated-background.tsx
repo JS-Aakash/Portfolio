@@ -140,8 +140,21 @@ const AnimatedBackground = () => {
     const app = splineAppRef.current;
     if (!app || !e.target) return;
 
-    // ONLY allow interaction during Skills section
-    if (activeSectionRef.current !== "skills") return;
+    // Allow interaction during Skills section.
+    // On mobile, also allow if skills element is actually visible (handles first-load race condition
+    // where IntersectionObserver hasn't fired yet but user is already on skills)
+    const isSkillsActive = activeSectionRef.current === "skills";
+    const skillsEl = document.getElementById("skills");
+    const skillsVisible = skillsEl
+      ? skillsEl.getBoundingClientRect().top < window.innerHeight * 0.6 &&
+        skillsEl.getBoundingClientRect().bottom > window.innerHeight * 0.2
+      : false;
+    if (!isSkillsActive && !skillsVisible) return;
+
+    // If detected via DOM check, update active section ref so future taps skip the check
+    if (!isSkillsActive && skillsVisible) {
+      activeSectionRef.current = "skills";
+    }
 
     const now = Date.now();
     // Lower throttle to 150ms for ultra-responsive key taps
@@ -215,11 +228,13 @@ const AnimatedBackground = () => {
     if (!kbd) return;
 
     let lastTransitionTime = 0;
+    // On mobile use a longer debounce to prevent rapid section switches during momentum scroll
+    const DEBOUNCE_MS = isMobileRef.current ? 600 : 300;
 
     const transitionTo = (section: Section) => {
       if (activeSectionRef.current === section) return;
       const now = Date.now();
-      if (now - lastTransitionTime < 300) return;
+      if (now - lastTransitionTime < DEBOUNCE_MS) return;
       lastTransitionTime = now;
 
       setActiveSection(section);
@@ -229,6 +244,16 @@ const AnimatedBackground = () => {
       gsap.to(kbd.position, { ...state.position, duration: 0.8, overwrite: "auto", ease: "power2.out" });
       gsap.to(kbd.rotation, { ...state.rotation, duration: 0.8, overwrite: "auto", ease: "power2.out" });
     };
+
+    // Mobile uses a tighter rootMargin so only the section firmly in view wins.
+    // Desktop keeps the wider margin for a smooth crossfade feel.
+    const rootMarginValue = isMobileRef.current
+      ? "-30% 0px -30% 0px"  // stricter: section must occupy ≥40% of viewport
+      : "-15% 0px -15% 0px";
+
+    const thresholds = isMobileRef.current
+      ? [0.4, 0.6, 0.8]  // higher thresholds on mobile so we only fire when section is clearly dominant
+      : [0.15, 0.4, 0.7];
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -244,8 +269,8 @@ const AnimatedBackground = () => {
       },
       {
         root: null,
-        rootMargin: "-15% 0px -15% 0px",
-        threshold: [0.15, 0.4, 0.7],
+        rootMargin: rootMarginValue,
+        threshold: thresholds,
       }
     );
 
