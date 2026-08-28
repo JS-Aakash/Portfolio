@@ -228,15 +228,32 @@ const AnimatedBackground = () => {
     if (!kbd) return;
 
     let lastTransitionTime = 0;
-    // On mobile use a longer debounce to prevent rapid section switches during momentum scroll
-    const DEBOUNCE_MS = isMobileRef.current ? 600 : 300;
+    let committedSection: Section | null = null;
+    // On mobile use a longer debounce + committed section lock to absorb momentum oscillation.
+    const DEBOUNCE_MS = isMobileRef.current ? 900 : 300;
 
     const transitionTo = (section: Section) => {
+      // Deduplicate: same as current active section, skip
       if (activeSectionRef.current === section) return;
-      const now = Date.now();
-      if (now - lastTransitionTime < DEBOUNCE_MS) return;
-      lastTransitionTime = now;
 
+      const now = Date.now();
+      const elapsed = now - lastTransitionTime;
+
+      // On mobile: if we already committed to a section within the debounce window,
+      // reject any reversal to the previous section (handles momentum oscillation).
+      // On desktop: just use the standard time debounce.
+      if (elapsed < DEBOUNCE_MS) {
+        if (isMobileRef.current && committedSection === section) {
+          // Allow re-committing to same target (e.g., confirmed after debounce)
+        } else {
+          return;
+        }
+      }
+
+      lastTransitionTime = now;
+      committedSection = section;
+
+      // Commit the section and dispatch events ONCE per real section change
       setActiveSection(section);
       window.dispatchEvent(new CustomEvent("clear-falling-skills"));
       const state = getKeyboardState(section);
@@ -244,16 +261,6 @@ const AnimatedBackground = () => {
       gsap.to(kbd.position, { ...state.position, duration: 0.8, overwrite: "auto", ease: "power2.out" });
       gsap.to(kbd.rotation, { ...state.rotation, duration: 0.8, overwrite: "auto", ease: "power2.out" });
     };
-
-    // Mobile uses a tighter rootMargin so only the section firmly in view wins.
-    // Desktop keeps the wider margin for a smooth crossfade feel.
-    const rootMarginValue = isMobileRef.current
-      ? "-30% 0px -30% 0px"  // stricter: section must occupy ≥40% of viewport
-      : "-15% 0px -15% 0px";
-
-    const thresholds = isMobileRef.current
-      ? [0.4, 0.6, 0.8]  // higher thresholds on mobile so we only fire when section is clearly dominant
-      : [0.15, 0.4, 0.7];
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -269,8 +276,8 @@ const AnimatedBackground = () => {
       },
       {
         root: null,
-        rootMargin: rootMarginValue,
-        threshold: thresholds,
+        rootMargin: "-15% 0px -15% 0px",
+        threshold: [0.15, 0.4, 0.7],
       }
     );
 
