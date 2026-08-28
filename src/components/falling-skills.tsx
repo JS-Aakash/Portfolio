@@ -21,19 +21,16 @@ export const FallingSkills = () => {
             const skill = e.detail as Skill;
             if (!skill) return;
 
-            const uid = Date.now() + Math.random();
-            const newSkill: FallingSkillInstance = { ...skill, uniqueId: uid };
+            const newSkill: FallingSkillInstance = {
+                ...skill,
+                uniqueId: Date.now() + Math.random(),
+            };
 
             setActiveSkills((prev) => {
                 const next = [...prev, newSkill];
                 if (next.length > 3) return next.slice(-3);
                 return next;
             });
-
-            // Auto-remove after 3.5s so they don't linger into the next section
-            setTimeout(() => {
-                setActiveSkills((prev) => prev.filter((s) => s.uniqueId !== uid));
-            }, 3500);
         };
 
         const handleClear = () => {
@@ -72,6 +69,13 @@ export const FallingSkills = () => {
 
 const FallingSkillItem = ({ skill, onRemove }: { skill: FallingSkillInstance; onRemove: () => void }) => {
     const [initialX] = useState(() => Math.random() * (typeof window !== "undefined" ? window.innerWidth - 100 : 200) + 50);
+
+    // Auto-remove after 5 seconds so skills don't bleed into the next section
+    useEffect(() => {
+        const timer = setTimeout(onRemove, 5000);
+        return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <motion.div
