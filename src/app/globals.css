@@ -13,6 +13,16 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
+/* ── Mobile URL bar stability ──
+   Using svh (Small Viewport Height) means the layout is always sized to
+   the viewport WITH the URL bar visible — it never reflows when the URL
+   bar shows or hides. This eliminates the "page jump" on mobile. */
+@media (max-width: 768px) {
+  body {
+    min-height: 100svh;
+  }
+}
+
 .font-display {
   font-family: var(--font-display), sans-serif;
 }

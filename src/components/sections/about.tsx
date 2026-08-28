@@ -41,7 +41,7 @@ const FocusItem = ({ icon, label }: { icon: React.ReactNode, label: string }) =>
 
 const AboutSection = () => {
     return (
-        <section id="about" className="relative w-full min-h-[100dvh] pt-4 pb-16 sm:pt-8 sm:pb-20 md:py-24 px-4 sm:px-6 md:px-12 lg:px-24 overflow-hidden pointer-events-none">
+        <section id="about" style={{ minHeight: '100svh' }} className="relative w-full pt-4 pb-16 sm:pt-8 sm:pb-20 md:py-24 px-4 sm:px-6 md:px-12 lg:px-24 overflow-hidden pointer-events-none">
             {/* Background Decorative Elements - Desktop only */}
             <div className="hidden lg:block absolute top-0 left-0 w-full h-full pointer-events-none">
                 <motion.div

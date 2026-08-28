@@ -22,7 +22,7 @@ const HeroSection = () => {
   const { isLoading } = usePreloader();
 
   return (
-    <section id="hero" className={cn("relative w-full min-h-[100dvh] md:h-[100dvh] pointer-events-none pb-8 md:pb-0 flex flex-col justify-center")}>
+    <section id="hero" style={{ minHeight: '100svh' }} className={cn("relative w-full md:h-[100dvh] pointer-events-none pb-8 md:pb-0 flex flex-col justify-center")}>
       <div className="grid md:grid-cols-12 h-full items-center px-4 sm:px-6 pointer-events-none">
         <div
           className={cn(
