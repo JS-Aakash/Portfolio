@@ -151,9 +151,14 @@ const AnimatedBackground = () => {
       : false;
     if (!isSkillsActive && !skillsVisible) return;
 
-    // If detected via DOM check, update active section ref so future taps skip the check
+    // If detected via DOM check (IntersectionObserver hasn't fired yet),
+    // update ref AND immediately make the text visible in the Spline scene.
     if (!isSkillsActive && skillsVisible) {
       activeSectionRef.current = "skills";
+      // Force text visible right now so the first tap shows the label
+      const targetMode = isMobileRef.current ? "text-mobile" : "text-desktop";
+      const textObj = app.findObjectByName(targetMode);
+      if (textObj) textObj.visible = true;
     }
 
     const now = Date.now();

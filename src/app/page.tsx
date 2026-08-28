@@ -19,7 +19,10 @@ function MainPage() {
       <FallingSkills />
       <SmoothScroll>
         <main className={cn("bg-transparent")}>
-          <div className="top-0 z-0 fixed w-full h-[100dvh]">
+          <div
+            className="top-0 z-0 fixed w-full"
+            style={{ height: '100svh' }}
+          >
             <AnimatedBackground />
           </div>
           <HeroSection />

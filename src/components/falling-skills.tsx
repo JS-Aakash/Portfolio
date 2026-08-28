@@ -14,10 +14,7 @@ export const FallingSkills = () => {
     const [activeSkills, setActiveSkills] = useState<FallingSkillInstance[]>([]);
 
     useEffect(() => {
-        console.log("FallingSkills: MOUNTED - Listening for keyboard-press");
-
         const handlePress = (e: any) => {
-            console.log("FallingSkills: RECEIVED Press Event for", e.detail?.label);
             const skill = e.detail as Skill;
             if (!skill) return;
 
@@ -34,15 +31,33 @@ export const FallingSkills = () => {
         };
 
         const handleClear = () => {
-            console.log("FallingSkills: CLEARING ALL SKILLS due to section change");
             setActiveSkills([]);
         };
 
         window.addEventListener("keyboard-press", handlePress);
         window.addEventListener("clear-falling-skills", handleClear);
+
+        // Watch for the projects section to start appearing.
+        // Fire clear instantly (2% threshold) so skills vanish right when
+        // the user scrolls past skills into projects — no debounce delay.
+        const projectsEl = document.getElementById("projects");
+        let projectsObserver: IntersectionObserver | null = null;
+        if (projectsEl) {
+            projectsObserver = new IntersectionObserver(
+                (entries) => {
+                    if (entries[0].isIntersecting) {
+                        setActiveSkills([]);
+                    }
+                },
+                { root: null, rootMargin: "0px", threshold: 0.02 }
+            );
+            projectsObserver.observe(projectsEl);
+        }
+
         return () => {
             window.removeEventListener("keyboard-press", handlePress);
             window.removeEventListener("clear-falling-skills", handleClear);
+            projectsObserver?.disconnect();
         };
     }, []);
 
@@ -70,7 +85,7 @@ export const FallingSkills = () => {
 const FallingSkillItem = ({ skill, onRemove }: { skill: FallingSkillInstance; onRemove: () => void }) => {
     const [initialX] = useState(() => Math.random() * (typeof window !== "undefined" ? window.innerWidth - 100 : 200) + 50);
 
-    // Auto-remove after 5 seconds so skills don't bleed into the next section
+    // Auto-remove after 5s as fallback (scroll-based clear in FallingSkills handles the main case)
     useEffect(() => {
         const timer = setTimeout(onRemove, 5000);
         return () => clearTimeout(timer);
